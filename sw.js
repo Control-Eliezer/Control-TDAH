@@ -2,7 +2,7 @@
    - La app (index.html) se pide primero a la red para recibir actualizaciones, y usa la copia guardada si no hay internet.
    - Las librerías (Tailwind, íconos, fuentes, confeti) se guardan la primera vez y luego cargan desde el teléfono.
    Para publicar una versión nueva, cambia VERSION. */
-const VERSION = 'centro-tdah-v6.1.0';
+const VERSION = 'centro-tdah-v7.0.0';
 const SHELL_CACHE = `${VERSION}-shell`;
 const CDN_CACHE = `${VERSION}-cdn`;
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
@@ -70,4 +70,13 @@ self.addEventListener('fetch', event => {
       )
     );
   }
+});
+
+/* Al tocar un aviso, abre (o enfoca) la app */
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+    for (const c of list) { if ('focus' in c) return c.focus(); }
+    return self.clients.openWindow ? self.clients.openWindow('./') : null;
+  }));
 });
