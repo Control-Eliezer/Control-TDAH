@@ -561,7 +561,7 @@
         <button class="link-btn" data-act="canIAfford">¿Me lo puedo permitir?</button>
       </div>
       <div class="money-wrap"><span>$</span><input id="expenseInput" class="field num" type="text" inputmode="numeric" autocomplete="off" placeholder="¿Cuánto gastaste?" data-money aria-label="Monto del gasto"></div>
-      <p class="text-[12px] dim mt-2 mb-2">Escribe el monto y toca en qué fue. Nada más.</p>
+      <div class="flex items-center justify-between gap-2 mt-2 mb-2"><p class="text-[12px] dim">Escribe el monto y toca en qué fue. Nada más.</p><button id="payCardBtn" class="chip-btn flex-none" data-act="payCard" aria-pressed="false"><i class="fa-solid fa-credit-card"></i> Con tarjeta</button></div>
       <div class="grid grid-cols-4 gap-2" id="expenseCats"></div>
     </div>
 
@@ -766,7 +766,7 @@
 /* =========================================================
    CONFIGURACIÓN
    ========================================================= */
-const APP_VERSION = '6.0.0';
+const APP_VERSION = '6.1.0';
 /* Huella (SHA-256) del correo del dueño: solo esa cuenta ve el Modo creador. No guarda el correo en texto. */
 const OWNER_HASH = '47d538ce808d885cef7fcfd5718ccc10ad89582a4302e3abaa40002f40ed3065';
 const EXT_KEY = 'centro_tdah_ext';
@@ -1561,12 +1561,13 @@ function renderHoyTop() {
       <p class="text-[12.5px] muted">Hoy solo cuentan ${plural(state.pause.items.length, 'cosa mínima', 'cosas mínimas')}. Tu racha está protegida y las tareas sin hacer pasaron a mañana.</p>
     </div>`);
   }
+  if (state.meta.onboarded && state.meta.seenVer !== '6.1') { state.meta.news5 = true; state.meta.seenVer = '6.1'; }
   if (state.meta.news5 || state.meta.news4) {
     parts.push(`<div class="card card-neon space-y-3">
       <div class="flex items-start gap-3">
         <div class="cult-mark">${SEC_CULTURE.hoy.mark}</div>
-        <div class="flex-1 min-w-0"><p class="font-display font-bold text-[15px] text-white">Bienvenido a la versión 5</p>
-        <p class="text-[12.5px] muted leading-snug mt-0.5">Mente al centro, una cultura por sección, «No puedo arrancar», ancla y estacionar, modo salida, temporadas con bóveda de premios, Casa con inventario y mascotas, y cuidado personal en Cuerpo. Mantén presionado cualquier título: hay detalles ocultos.</p></div>
+        <div class="flex-1 min-w-0"><p class="font-display font-bold text-[15px] text-white">Bienvenido a la versión ${esc(APP_VERSION.split('.').slice(0, 2).join('.'))}</p>
+        <p class="text-[12.5px] muted leading-snug mt-0.5">Todo conectado: Dinero te dice la verdad del mes, la agenda se ordena sola por prioridad, la despensa cuenta unidades y avisa antes de quedarte en cero, y tus días de compra quedan fijos.</p></div>
         <button class="icon-btn" data-act="newsDismiss" aria-label="Ocultar novedades"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="grid grid-cols-2 gap-2">
@@ -2839,7 +2840,7 @@ function historyRow(h) {
     const c = EXPENSE_CATS.find(x => x.key === h.cat) || EXPENSE_CATS[EXPENSE_CATS.length - 1];
     const e = ENVELOPES.find(x => x.key === h.env) || ENVELOPES[0];
     return `<div class="hist-row"><div class="hist-ico" style="background:${e.color}22;color:${e.color}"><i class="fa-solid ${c.icon}"></i></div>
-      <div class="flex-1 min-w-0"><p class="text-[13.5px] font-semibold text-white truncate">Gasto · ${esc(c.name)}</p><p class="text-[11.5px] dim num">${shortDate(h.ts)} · bolsa ${esc(e.short.toLowerCase())}</p></div>
+      <div class="flex-1 min-w-0"><p class="text-[13.5px] font-semibold text-white truncate">Gasto · ${esc(c.name)}</p><p class="text-[11.5px] dim num">${shortDate(h.ts)} · ${h.card ? 'con tarjeta' : 'bolsa ' + esc(e.short.toLowerCase())}${h.note ? ' · ' + esc(h.note) : ''}</p></div>
       <p class="font-display font-bold text-[14px] text-rose-300 num">−${clp(h.amount)}</p>${del}</div>`;
   }
   const s = SOURCE_META[h.source] || SOURCE_META.sueldo;
@@ -2888,7 +2889,11 @@ function addExpense(catKey) {
   if (v <= 0) { toast('Primero escribe cuánto gastaste, después toca la categoría.', 'warn'); sound('error'); input.focus(); return; }
   const c = EXPENSE_CATS.find(x => x.key === catKey);
   if (!c) return;
-  pushHistory({ kind: 'gasto', cat: c.key, env: c.env, amount: v });
+  const card = !!ui.payCard;
+  const debt = card ? (state.finance.debts.find(d => /tarjeta|cr[eé]dito/i.test(d.name)) || state.finance.debts[0]) : null;
+  pushHistory(Object.assign({ kind: 'gasto', cat: c.key, env: c.env, amount: v }, card ? { card: true, debtId: debt ? debt.id : null } : {}));
+  if (debt) debt.initial += v;
+  if (card) { ui.payCard = false; toast(debt ? `Con tarjeta: ${clp(v)} se sumó a «${debt.name}». Tu saldo en mano no cambia.` : 'Anotado con tarjeta (no tienes deuda creada para sumarlo).', 'info', 5000); }
   const today = dayKey();
   const nToday = state.finance.history.filter(h => h.kind === 'gasto' && dayKey(h.ts) === today).length;
   if (nToday <= 5) reward(5, 2); else registerActivity();
@@ -2938,6 +2943,7 @@ function deleteHistory(id) {
     onOk: () => {
       if (h.kind === 'ingreso') f.fund = Math.max(0, f.fund - ((h.parts && h.parts.deuda) || 0));
       if (h.kind === 'abono') { const d = f.debts.find(x => x.id === h.debtId); if (d) d.paid = Math.max(0, d.paid - h.amount); f.fund += h.fromFund || 0; }
+      if (h.kind === 'gasto' && h.card && h.debtId) { const d = f.debts.find(x => x.id === h.debtId); if (d) d.initial = Math.max(d.paid, d.initial - h.amount); }
       f.history = f.history.filter(x => x.id !== id);
       save(); renderFinanzas(); toast('Registro eliminado', 'info');
     }
@@ -3435,11 +3441,20 @@ function weekMeals() {
 /* =========================================================
    COMPRAS: lista del sábado, despensa con memoria, metas y lista de espera
    ========================================================= */
-const PANTRY_CATS = { despensa: 'Despensa', aseo: 'Aseo', higiene: 'Higiene', mascota: 'Mascota', otro: 'Otro' };
+const PANTRY_CATS = { fresco: 'Frutas y verduras', despensa: 'Despensa', aseo: 'Aseo', higiene: 'Higiene', mascota: 'Mascota', otro: 'Otro' };
 const GOAL_LEVELS = { extremo: { name: 'Extremo', pct: .9, hint: 'solo lo esencial' }, medio: { name: 'Medio', pct: .6, hint: 'con algunos gustos' }, relajado: { name: 'Relajado', pct: .35, hint: 'sin apretarte' } };
 
 function daysBetween(a, b) { return Math.round((parseKey(b) - parseKey(a)) / 86400e3); }
-function pantryLeft(p) { if (!p.last) return 0; return p.days - daysBetween(p.last, calKey()); }
+const SHOP_WHERE = { feria: 'Feria', semana: 'Compra de la semana', mes: 'Compra grande del mes' };
+function pantryWhere(p) { return SHOP_WHERE[p.where] ? p.where : p.cat === 'fresco' ? 'feria' : (p.cat === 'aseo' || p.cat === 'higiene' || p.cat === 'mascota') ? 'mes' : 'semana'; }
+function pantryHasStock(p) { return typeof p.qty === 'number'; }
+function pantryStock(p) { if (!pantryHasStock(p)) return null; if (!p.last) return p.qty; return Math.max(0, p.qty - daysBetween(p.last, calKey()) / Math.max(1, p.days)); }
+function pantryLeft(p) {
+  if (!p.last) return 0;
+  if (pantryHasStock(p)) return Math.floor((pantryStock(p) - (p.min || 0)) * p.days);
+  return p.days - daysBetween(p.last, calKey());
+}
+function pantryUnits(n) { const r = Math.round(n * 2) / 2; return r % 1 ? String(r).replace('.', ',') : String(r); }
 function pantryDue(limit = 3) { return state.pantry.filter(p => pantryLeft(p) <= limit).sort((a, b) => pantryLeft(a) - pantryLeft(b)); }
 
 /* Plata libre al mes según tu plan (ingresos habituales menos fijos, comida y colchón) */
@@ -3531,8 +3546,8 @@ function renderDineroMetas() {
 /* ---------- Lista del sábado ---------- */
 function shopItems() {
   const items = [];
-  pantryDue(3).forEach(p => items.push({ key: 'p:' + p.id, name: p.name, price: p.price || 0, src: 'despensa', pid: p.id, c: !!(state.shop.checked || {})['p:' + p.id] }));
-  state.shop.extra.forEach(x => items.push({ key: 'x:' + x.id, name: x.name, price: x.price || 0, src: x.src || 'tuyo', xid: x.id, c: !!x.c }));
+  pantryDue(3).forEach(p => { const n = Math.max(1, p.buy || 1); items.push({ key: 'p:' + p.id, name: p.name, units: n, price: (p.price || 0) * n, src: 'despensa', pid: p.id, where: pantryWhere(p), c: !!(state.shop.checked || {})['p:' + p.id] }); });
+  state.shop.extra.forEach(x => { const pp = state.pantry.find(q => q.name.toLowerCase() === x.name.toLowerCase()); items.push({ key: 'x:' + x.id, name: x.name, price: x.price || 0, src: x.src || 'tuyo', xid: x.id, where: pp ? pantryWhere(pp) : 'semana', c: !!x.c }); });
   return items;
 }
 function shopListHTML() {
@@ -3541,7 +3556,8 @@ function shopListHTML() {
   const inCart = items.filter(i => i.c).reduce((a, i) => a + i.price, 0);
   const sp = todaySpend();
   const budget = state.finance.plan.foodWeek || 0;
-  const over = budget && total > budget;
+  const weekTotal = items.filter(i => i.where !== 'mes').reduce((a, i) => a + i.price, 0);
+  const over = budget && weekTotal > budget;
   return `
     <div class="card space-y-3">
       <div class="grid grid-cols-3 gap-2 text-center">
@@ -3549,19 +3565,20 @@ function shopListHTML() {
         <div><p class="text-[11px] muted">En el carro</p><p class="font-display font-bold text-[16px] num" style="color:var(--mint)">${clp(inCart)}</p></div>
         <div><p class="text-[11px] muted">${budget ? 'Presupuesto' : 'Falta'}</p><p class="font-display font-bold text-[16px] num ${over ? '' : 'ac'}" style="${over ? 'color:var(--rose)' : ''}">${clp(budget || total - inCart)}</p></div>
       </div>
-      ${over ? `<p class="text-[12.5px]" style="color:var(--rose)">La lista se pasa ${clp(total - budget)} del presupuesto de la semana. Saca lo que pueda esperar.</p>` : budget ? `<p class="text-[12px] dim">Cabe en tu presupuesto de comida de la semana.</p>` : ''}
+      ${over ? `<p class="text-[12.5px]" style="color:var(--rose)">Lo de la semana se pasa ${clp(weekTotal - budget)} del presupuesto. Saca lo que pueda esperar.</p>` : budget ? `<p class="text-[12px] dim">Cabe en tu presupuesto de comida de la semana.</p>` : ''}
       <div class="flex gap-2"><input id="shopAdd" class="field flex-1" maxlength="50" placeholder="Agregar algo a la lista" aria-label="Agregar a la lista"><button class="btn btn-ghost" data-act="shopAdd" aria-label="Agregar"><i class="fa-solid fa-plus"></i></button></div>
     </div>
-    ${items.length ? `<div class="space-y-1.5">${items.map(i => `<div class="mission ${i.c ? 'is-done' : ''}">
+    ${shopDaysHTML()}
+    ${items.length ? `${Object.keys(SHOP_WHERE).filter(w => items.some(i => i.where === w)).map(w => `<p class="eyebrow px-1 mt-3 mb-1.5">${esc(SHOP_WHERE[w])}${shopDayLabel(w) ? ` · <span class="ac">${esc(shopDayLabel(w))}</span>` : ''}</p><div class="space-y-1.5">${items.filter(i => i.where === w).map(i => `<div class="mission ${i.c ? 'is-done' : ''}">
       <button class="mission-main !py-2.5" data-act="shopToggle" data-key="${esc(i.key)}" aria-pressed="${i.c}">
         <span class="check !w-7 !h-7"><i class="fa-solid fa-check"></i></span>
-        <span class="flex-1 min-w-0"><span class="m-title block text-[14px] font-semibold text-white truncate">${esc(i.name)}</span><span class="block text-[11px] dim">${i.src === 'despensa' ? 'se está acabando' : i.src === 'receta' ? 'para tus recetas' : 'agregado por ti'}</span></span>
+        <span class="flex-1 min-w-0"><span class="m-title block text-[14px] font-semibold text-white truncate">${esc(i.name)}</span><span class="block text-[11px] dim">${i.src === 'despensa' ? `llegó a tu reserva · compra ${i.units}` : i.src === 'receta' ? 'para tus recetas' : 'agregado por ti'}</span></span>
         <span class="text-[12.5px] muted num flex-none">${i.price ? clp(i.price) : '—'}</span>
       </button>
       ${i.xid ? `<button class="icon-btn" data-act="shopDel" data-id="${esc(i.xid)}" aria-label="Quitar ${esc(i.name)}"><i class="fa-solid fa-xmark"></i></button>` : ''}
-    </div>`).join('')}</div>
-    <button class="btn btn-mint w-full" data-act="shopFinish"><i class="fa-solid fa-cart-shopping"></i> Terminé la compra</button>`
-    : `<div class="card text-center"><p class="text-[14px] text-white font-semibold">Lista vacía</p><p class="text-[12.5px] muted mt-1">Lo que se te está acabando de la despensa aparece aquí solo. También puedes pasar los ingredientes de tu menú desde Cuerpo.</p></div>`}`;
+    </div>`).join('')}</div>`).join('')}
+    <button class="btn btn-mint w-full mt-3" data-act="shopFinish"><i class="fa-solid fa-cart-shopping"></i> Terminé la compra</button>`
+    : `<div class="card text-center"><p class="text-[14px] text-white font-semibold">Lista vacía</p><p class="text-[12.5px] muted mt-1">Cuando algo de tu despensa llega a su reserva, aparece aquí solo. También puedes pasar los ingredientes de tu menú desde Cuerpo.</p></div>`}`;
 }
 function shopToggle(key) {
   if (key.startsWith('p:')) { state.shop.checked = state.shop.checked || {}; if (state.shop.checked[key]) delete state.shop.checked[key]; else state.shop.checked[key] = true; }
@@ -3590,7 +3607,8 @@ function shopFinish() {
       if (real <= 0) return modalError('Escribe el total que pagaste.');
       pushHistory({ kind: 'gasto', cat: 'super', env: 'esenciales', amount: real, note: 'Compra de la semana' });
       const today = calKey();
-      items.filter(i => i.pid).forEach(i => pantryBought(i.pid, true));
+      items.filter(i => i.pid).forEach(i => pantryBought(i.pid, true, i.units));
+      items.filter(i => i.xid).forEach(i => { const pp = state.pantry.find(q => q.name.toLowerCase() === i.name.toLowerCase()); if (pp) pantryBought(pp.id, true, pp.buy || 1); });
       state.shop.checked = {};
       state.shop.extra = state.shop.extra.filter(x => !x.c);
       state.shop.lastDone = today;
@@ -3606,55 +3624,146 @@ function shopFinish() {
 /* ---------- Despensa con memoria ---------- */
 function pantryHTML() {
   const list = state.pantry.slice().sort((a, b) => pantryLeft(a) - pantryLeft(b));
-  if (!list.length) return `<div class="card text-center space-y-2"><p class="text-[14px] text-white font-semibold">Tu despensa está vacía</p><p class="text-[12.5px] muted">Agrega lo esencial (papel higiénico, arroz, detergente…) con cuántos días te dura. La app te avisa cuando se esté acabando, sin que tengas que anotarlo.</p><button class="btn btn-primary btn-sm" data-act="pantryAdd"><i class="fa-solid fa-plus"></i> Agregar producto</button></div>`;
-  return `<div class="flex items-center justify-between px-1"><p class="text-[12px] muted">Toca "Compré" cuando lo compres. La app aprende cuánto te dura de verdad.</p><button class="icon-btn" data-act="pantryAdd" aria-label="Agregar producto"><i class="fa-solid fa-plus"></i></button></div>
+  if (!list.length) return `<div class="card text-center space-y-2"><p class="text-[14px] text-white font-semibold">Tu despensa está vacía</p><p class="text-[12.5px] muted">Agrega tu despensa base: cuántos tienes, cuánto te dura cada uno y cuántos quieres de reserva. Cuando llegues a la reserva, pasa solo a la lista de compras.</p><button class="btn btn-primary btn-sm" data-act="pantryAdd"><i class="fa-solid fa-plus"></i> Agregar producto</button></div>`;
+  return `<div class="flex items-center justify-between px-1"><p class="text-[12px] muted">Tu despensa base. "Compré" suma unidades; "Contar" corrige lo que de verdad queda y la app aprende.</p><button class="icon-btn" data-act="pantryAdd" aria-label="Agregar producto"><i class="fa-solid fa-plus"></i></button></div>
   <div class="space-y-2">${list.map(p => {
     const left = pantryLeft(p);
-    const pct = clamp(left / p.days * 100, 0, 100);
-    const st = left <= 0 ? ['bad', 'revisar'] : left <= 3 ? ['warn', `${left} d`] : ['ok', `${left} d`];
-    return `<div class="card !p-3 flex items-center gap-3">
-      <button class="flex-1 min-w-0 text-left" data-act="pantryEdit" data-id="${esc(p.id)}">
-        <span class="flex items-center gap-2"><span class="text-[14px] font-semibold text-white truncate">${esc(p.name)}</span><span class="pill ${st[0]}">${st[1]}</span></span>
-        <span class="block text-[11.5px] muted mt-0.5 num">${esc(PANTRY_CATS[p.cat] || 'Otro')} · dura ~${p.days} días${p.price ? ' · ' + clp(p.price) : ''}</span>
-        <span class="bar ${left <= 0 ? 'over' : left <= 3 ? 'warn' : 'mint'} mt-2"><i style="width:${pct}%"></i></span>
-      </button>
-      <button class="btn btn-ghost btn-sm" data-act="pantryBought" data-id="${esc(p.id)}">Compré</button>
+    const st = !p.last ? ['', 'sin fecha'] : left <= 0 ? ['bad', 'a la lista'] : left <= 3 ? ['warn', `${left} d`] : ['ok', `${left} d`];
+    const has = pantryHasStock(p);
+    const stock = has ? pantryStock(p) : null;
+    const pct = has ? clamp(stock / Math.max(1, (p.min || 0) + (p.buy || 1) + 1) * 100, 0, 100) : clamp(left / p.days * 100, 0, 100);
+    return `<div class="card !p-3 space-y-2">
+      <div class="flex items-center gap-3">
+        <button class="flex-1 min-w-0 text-left" data-act="pantryEdit" data-id="${esc(p.id)}">
+          <span class="flex items-center gap-2"><span class="text-[14px] font-semibold text-white truncate">${esc(p.name)}</span><span class="pill ${st[0]}">${st[1]}</span></span>
+          <span class="block text-[11.5px] muted mt-0.5 num">${has ? `quedan ~${pantryUnits(stock)} · reserva ${p.min || 0} · ` : ''}cada uno dura ~${p.days} d${p.price ? ' · ' + clp(p.price) : ''}</span>
+        </button>
+      </div>
+      <span class="bar ${left <= 0 ? 'over' : left <= 3 ? 'warn' : 'mint'}"><i style="width:${pct}%"></i></span>
+      <div class="flex gap-2"><button class="btn btn-ghost btn-sm flex-1" data-act="pantryCount" data-id="${esc(p.id)}"><i class="fa-solid fa-list-ol"></i> Contar</button><button class="btn btn-ghost btn-sm flex-1" data-act="pantryBought" data-id="${esc(p.id)}"><i class="fa-solid fa-bag-shopping"></i> Compré</button></div>
     </div>`;
   }).join('')}</div>`;
 }
-function pantryBought(id, silent) {
+function stepperHTML(id, val, min = 0, max = 99) {
+  return `<div class="flex items-center gap-2"><button type="button" class="icon-btn" data-act="stepQty" data-for="${id}" data-d="-1" aria-label="Menos"><i class="fa-solid fa-minus"></i></button><input id="${id}" class="field num text-center !w-20" type="number" inputmode="decimal" min="${min}" max="${max}" step="0.5" value="${val}"><button type="button" class="icon-btn" data-act="stepQty" data-for="${id}" data-d="1" aria-label="Más"><i class="fa-solid fa-plus"></i></button></div>`;
+}
+function pantryBought(id, silent, units) {
   const p = state.pantry.find(x => x.id === id);
   if (!p) return;
-  const today = calKey();
-  if (p.last) {
-    const real = daysBetween(p.last, today);
-    if (real >= 2 && real <= p.days * 3) p.days = Math.max(1, Math.round(p.days * 0.7 + real * 0.3));
+  if (!silent && units === undefined) {
+    openModal({
+      title: `Compré ${p.name}`,
+      html: `<p class="lbl">¿Cuántas unidades compraste?</p>${stepperHTML('fBuyN', p.buy || 1, 0.5)}<p class="text-[12px] dim">Si compras 3 y cada uno dura ${p.days} días, te avisa en ~${p.days * 3} días menos tu reserva.</p>`,
+      actions: [{ label: 'Cancelar' }, { label: 'Guardar', kind: 'btn-primary', icon: 'fa-check', onClick: () => { pantryBought(id, false, Math.max(0.5, Number($('#fBuyN').value) || 1)); } }]
+    });
+    return;
   }
+  const n = units || p.buy || 1;
+  const today = calKey();
+  const before = pantryHasStock(p) ? pantryStock(p) : 0;
+  p.qty = Math.round((before + n) * 10) / 10;
   p.last = today;
   if (state.shop.checked) delete state.shop.checked['p:' + id];
-  if (!silent) { save(); renderCompras(); toast(`${p.name}: vuelvo a contar desde hoy (~${p.days} días).`, 'ok'); }
+  if (!silent) { save(); renderCompras(); toast(`${p.name}: ahora tienes ~${pantryUnits(p.qty)}. Te aviso en ~${Math.max(0, pantryLeft(p))} días.`, 'ok', 4000); }
+}
+function pantryCount(id) {
+  const p = state.pantry.find(x => x.id === id);
+  if (!p) return;
+  const est = pantryHasStock(p) ? pantryStock(p) : 1;
+  openModal({
+    title: `¿Cuánto queda de ${p.name}?`,
+    html: `<p class="text-[12.5px] muted -mt-2">Cuenta lo que hay en casa (puedes poner medios: 0,5). Con eso aprendo cuánto te dura de verdad.</p>${stepperHTML('fCntN', pantryUnits(est).replace(',', '.'))}`,
+    actions: [{ label: 'Cancelar' }, { label: 'Guardar', kind: 'btn-primary', icon: 'fa-check', onClick: () => {
+      const real = Math.max(0, Number($('#fCntN').value) || 0);
+      if (pantryHasStock(p) && p.last) {
+        const el = daysBetween(p.last, calKey()), used = p.qty - real;
+        if (el >= 2 && used > 0) { const per = el / used; if (per >= 0.5 && per <= p.days * 4) p.days = Math.max(1, Math.round(p.days * 0.5 + per * 0.5)); }
+      }
+      p.qty = Math.round(real * 10) / 10; p.last = calKey();
+      save(); renderCompras();
+      toast(pantryLeft(p) <= 0 ? `${p.name} pasó a la lista de compras.` : `Anotado. Cada uno te dura ~${p.days} días.`, 'ok', 4000);
+    } }]
+  });
 }
 function openPantryModal(id) {
   const p = id ? state.pantry.find(x => x.id === id) : null;
   openModal({
     title: p ? 'Editar producto' : 'Producto de la despensa',
     html: `
-      <div><label class="lbl" for="fPName">Producto</label><input id="fPName" class="field" maxlength="40" value="${esc(p ? p.name : '')}" placeholder="Ej: Papel higiénico (4 rollos)"></div>
+      <div><label class="lbl" for="fPName">Producto (con su tamaño)</label><input id="fPName" class="field" maxlength="40" value="${esc(p ? p.name : '')}" placeholder="Ej: Leche 1 L, Fideos 400 g"></div>
       <div class="grid grid-cols-2 gap-3">
-        <div><label class="lbl" for="fPDays">¿Cuántos días te dura?</label><input id="fPDays" class="field num" type="number" inputmode="numeric" min="1" max="365" value="${p ? p.days : 14}"></div>
-        <div><label class="lbl" for="fPPrice">Precio aprox.</label><div class="money-wrap"><span>$</span><input id="fPPrice" class="field num" inputmode="numeric" data-money value="${p && p.price ? thousands(p.price) : ''}" placeholder="0"></div></div>
+        <div><p class="lbl">¿Cuántos tienes hoy?</p>${stepperHTML('fPQty', p && pantryHasStock(p) ? pantryUnits(pantryStock(p)).replace(',', '.') : 1)}</div>
+        <div><p class="lbl">Reserva mínima</p>${stepperHTML('fPMin', p && p.min != null ? p.min : 1)}</div>
       </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl" for="fPDays">Cada uno te dura (días)</label><input id="fPDays" class="field num" type="number" inputmode="numeric" min="1" max="365" value="${p ? p.days : 7}"></div>
+        <div><p class="lbl">Compras de a</p>${stepperHTML('fPBuy', p && p.buy ? p.buy : 1, 1)}</div>
+      </div>
+      <div><label class="lbl" for="fPPrice">Precio por unidad (aprox.)</label><div class="money-wrap"><span>$</span><input id="fPPrice" class="field num" inputmode="numeric" data-money value="${p && p.price ? thousands(p.price) : ''}" placeholder="0"></div></div>
       <div><p class="lbl">Tipo</p><div class="flex flex-wrap gap-1.5">${Object.entries(PANTRY_CATS).map(([k, n]) => `<button class="chip-btn" data-act="segPick" data-group="fPCat" data-val="${k}" aria-pressed="${(p ? p.cat : 'despensa') === k}">${n}</button>`).join('')}</div></div>
-      <div><label class="lbl" for="fPLast">Última vez que lo compraste</label><input id="fPLast" class="field" type="date" value="${esc(p && p.last ? p.last : calKey())}"></div>
+      <div><p class="lbl">¿Dónde lo compras?</p><div class="seg">${Object.entries(SHOP_WHERE).map(([k, n]) => `<button data-act="segPick" data-group="fPWhere" data-val="${k}" aria-pressed="${(p ? pantryWhere(p) : 'semana') === k}">${n.replace('Compra de la semana', 'Semanal').replace('Compra grande del mes', 'Mensual')}</button>`).join('')}</div></div>
+      <p class="text-[12px] dim">Cuando lo que tienes baja hasta la reserva, pasa solo a la lista de compras. Así nunca quedas en cero.</p>
       <p id="modalErr" class="text-[13px] text-rose-300" hidden></p>`,
     actions: (p ? [{ label: 'Eliminar', kind: 'btn-danger', icon: 'fa-trash', onClick: () => { state.pantry = state.pantry.filter(x => x.id !== p.id); save(); renderCompras(); } }] : [{ label: 'Cancelar' }]).concat([{ label: 'Guardar', kind: 'btn-primary', icon: 'fa-check', onClick: () => {
       const name = $('#fPName').value.trim();
       if (!name) return modalError('Escribe el producto.');
-      const data = { name: name.slice(0, 40), days: intIn($('#fPDays').value, 1, 365, 14), price: parseCLP($('#fPPrice').value), cat: segValue('fPCat') || 'despensa', last: /^\d{4}-\d{2}-\d{2}$/.test($('#fPLast').value) ? $('#fPLast').value : calKey() };
+      const num = (sel, d) => { const v = Number($(sel).value); return isFinite(v) && v >= 0 ? Math.round(v * 10) / 10 : d; };
+      const data = { name: name.slice(0, 40), days: intIn($('#fPDays').value, 1, 365, 7), price: parseCLP($('#fPPrice').value), cat: segValue('fPCat') || 'despensa', where: segValue('fPWhere') || 'semana', qty: num('#fPQty', 1), min: num('#fPMin', 1), buy: Math.max(1, num('#fPBuy', 1)), last: calKey() };
       if (p) Object.assign(p, data); else state.pantry.push(Object.assign({ id: 'p' + uid() }, data));
       save(); renderCompras(); toast('Guardado ✓');
     } }])
   });
+}
+
+/* ---------- Días fijos de compra ---------- */
+function shopDays() { return state.shop.days = state.shop.days || {}; }
+function shopDayLabel(w) {
+  const d = shopDays()[w];
+  if (!d) return '';
+  if (w === 'mes') return d.day ? `día ${d.day}` : '';
+  return d.wd != null ? `${WEEKDAYS[d.wd].toLowerCase()} ${d.time || ''}`.trim() : '';
+}
+function shopDaysHTML() {
+  const d = shopDays();
+  const set = Object.keys(SHOP_WHERE).filter(w => shopDayLabel(w));
+  return `<button class="env !p-3 w-full text-left flex items-center gap-3" data-act="shopDaysOpen"><i class="fa-solid fa-calendar-check ac"></i><span class="flex-1 min-w-0"><span class="block text-[13.5px] text-white font-semibold">Días de compra</span><span class="block text-[11.5px] muted truncate">${set.length ? set.map(w => `${SHOP_WHERE[w].replace('Compra de la semana', 'Semana').replace('Compra grande del mes', 'Mes')}: ${shopDayLabel(w)}`).join(' · ') : 'Fija la feria, la compra de la semana y la del mes'}</span></span><i class="fa-solid fa-chevron-right dim"></i></button>`;
+}
+function openShopDays() {
+  const d = shopDays();
+  const wdSeg = (g, v) => `<div class="flex flex-wrap gap-1.5">${[1, 2, 3, 4, 5, 6, 0].map(i => `<button class="chip-btn" data-act="segPick" data-group="${g}" data-val="${i}" aria-pressed="${v === i}">${WEEKDAYS[i].slice(0, 3)}</button>`).join('')}<button class="chip-btn" data-act="segPick" data-group="${g}" data-val="no" aria-pressed="${v == null}">No</button></div>`;
+  openModal({
+    title: 'Días de compra',
+    html: `<p class="text-[12.5px] muted -mt-2">Quedan fijos en tu agenda y la lista se ordena por dónde compras cada cosa.</p>
+      <div class="space-y-1.5"><p class="lbl">Feria (frutas y verduras)</p>${wdSeg('sdFeria', d.feria ? d.feria.wd : 4)}<input id="sdFeriaT" class="field" type="time" value="${esc((d.feria && d.feria.time) || '09:00')}"></div>
+      <div class="space-y-1.5"><p class="lbl">Compra de la semana</p>${wdSeg('sdSemana', d.semana ? d.semana.wd : 6)}<input id="sdSemanaT" class="field" type="time" value="${esc((d.semana && d.semana.time) || '11:00')}"></div>
+      <div class="space-y-1.5"><label class="lbl" for="sdMes">Compra grande del mes: ¿qué día?</label><input id="sdMes" class="field num" type="number" inputmode="numeric" min="1" max="31" value="${d.mes && d.mes.day ? d.mes.day : 1}"><p class="text-[11.5px] dim">Ideal: justo después del sueldo. Déjalo vacío si no quieres fecha fija.</p></div>`,
+    actions: [{ label: 'Cancelar' }, { label: 'Guardar', kind: 'btn-primary', icon: 'fa-check', onClick: () => { saveShopDays(); } }]
+  });
+}
+function saveShopDays() {
+  const d = shopDays();
+  const rd = [['feria', 'sdFeria', 'Feria: frutas y verduras', 60, '#3fb8a8'], ['semana', 'sdSemana', 'Compra de la semana', 60, '#3fb8a8']];
+  rd.forEach(([w, g, title, dur, color]) => {
+    const v = segValue(g);
+    const time = $(`#${g}T`).value || '10:00';
+    let r = state.routines.find(x => x.shop === w);
+    if (v == null || v === 'no') { d[w] = null; if (r) state.routines = state.routines.filter(x => x !== r); return; }
+    const wd = Number(v);
+    d[w] = { wd, time };
+    const data = { name: title, letter: w === 'feria' ? 'F' : 'C', time, dur, days: [wd], color, shop: w };
+    if (r) Object.assign(r, data); else state.routines.push(Object.assign({ id: 'r' + uid() }, data));
+  });
+  const day = parseInt($('#sdMes').value);
+  let rc = state.recurrents.find(x => x.shop === 'mes');
+  if (day >= 1 && day <= 31) {
+    d.mes = { day };
+    const t = parseKey(calKey()); const at = (y, m) => new Date(y, m, Math.min(day, new Date(y, m + 1, 0).getDate()));
+    let next = at(t.getFullYear(), t.getMonth());
+    if (keyOf(next) < calKey()) next = at(t.getFullYear(), t.getMonth() + 1);
+    const data = { title: 'Compra grande del mes', every: 1, unit: 'meses', next: keyOf(next), amount: 0, cat: '', shop: 'mes' };
+    if (rc) Object.assign(rc, data); else state.recurrents.push(Object.assign({ id: 'rc' + uid() }, data));
+  } else { d.mes = null; if (rc) state.recurrents = state.recurrents.filter(x => x !== rc); }
+  save(); renderAll(); toast('Días de compra en tu agenda ✓', 'ok');
 }
 
 /* ---------- Metas con prioridad y niveles de ahorro ---------- */
@@ -6444,7 +6553,7 @@ function expectedIncome(toKey, includeSueldo) {
 function balanceNow() {
   const a = state.finance.anchor;
   if (!a) return null;
-  return state.finance.history.filter(h => h.ts > a.ts).reduce((acc, h) => h.kind === 'ingreso' ? acc + h.amount : (h.kind === 'gasto' || h.kind === 'abono') ? acc - h.amount : acc, a.amount);
+  return state.finance.history.filter(h => h.ts > a.ts).reduce((acc, h) => h.kind === 'ingreso' ? acc + h.amount : (h.kind === 'gasto' && !h.card) || h.kind === 'abono' ? acc - h.amount : acc, a.amount);
 }
 function monthTruth() {
   const pd = nextPayday();
@@ -9043,6 +9152,10 @@ const ACTIONS = {
   pantryAdd: () => openPantryModal(null),
   pantryEdit: el => openPantryModal(el.dataset.id),
   pantryBought: el => pantryBought(el.dataset.id),
+  pantryCount: el => pantryCount(el.dataset.id),
+  shopDaysOpen: () => openShopDays(),
+  stepQty: el => { const i = document.getElementById(el.dataset.for); if (!i) return; const v = Math.max(Number(i.min) || 0, Math.min(Number(i.max) || 99, (Number(i.value) || 0) + Number(el.dataset.d))); i.value = v; },
+  payCard: () => { ui.payCard = !ui.payCard; const b = $('#payCardBtn'); if (b) b.setAttribute('aria-pressed', String(!!ui.payCard)); },
   goalAdd: () => openGoalModal(null),
   goalEdit: el => openGoalModal(el.dataset.id),
   goalSave: el => openGoalSave(el.dataset.id),
