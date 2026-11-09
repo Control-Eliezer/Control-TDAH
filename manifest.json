@@ -1,0 +1,88 @@
+{
+  "id": "./",
+  "name": "Centro de Control TDAH",
+  "short_name": "Centro TDAH",
+  "description": "Tu día, agenda, mente, dinero, casa y cuerpo en un solo lugar. Hecha para cabezas con TDAH: orden, datos y calma.",
+  "lang": "es-CL",
+  "dir": "ltr",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
+  "orientation": "portrait",
+  "background_color": "#0f1013",
+  "theme_color": "#0f1013",
+  "categories": [
+    "productivity",
+    "finance",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Hoy",
+      "short_name": "Hoy",
+      "url": "./?tab=hoy",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Mente: cómo me siento",
+      "short_name": "Mente",
+      "url": "./?tab=mente",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Registrar gasto",
+      "short_name": "Dinero",
+      "url": "./?tab=finanzas",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Casa y compras",
+      "short_name": "Casa",
+      "url": "./?tab=casa",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
