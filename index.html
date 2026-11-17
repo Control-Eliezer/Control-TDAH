@@ -285,6 +285,9 @@
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
   }
+  .mt-2\.5 {
+    margin-top: calc(var(--spacing) * 2.5);
+  }
   .mt-3 {
     margin-top: calc(var(--spacing) * 3);
   }
@@ -447,6 +450,9 @@
   .w-8 {
     width: calc(var(--spacing) * 8);
   }
+  .w-11 {
+    width: calc(var(--spacing) * 11);
+  }
   .w-14 {
     width: calc(var(--spacing) * 14);
   }
@@ -547,6 +553,9 @@
   .grid-cols-10 {
     grid-template-columns: repeat(10, minmax(0, 1fr));
   }
+  .grid-cols-\[1fr_1fr_auto\] {
+    grid-template-columns: 1fr 1fr auto;
+  }
   .grid-cols-\[1fr_96px\] {
     grid-template-columns: 1fr 96px;
   }
@@ -568,9 +577,6 @@
   .grid-cols-\[auto_1fr_1fr\] {
     grid-template-columns: auto 1fr 1fr;
   }
-  .grid-cols-\[auto_1fr_1fr_1fr\] {
-    grid-template-columns: auto 1fr 1fr 1fr;
-  }
   .flex-col {
     flex-direction: column;
   }
@@ -579,6 +585,9 @@
   }
   .\!items-start {
     align-items: flex-start !important;
+  }
+  .items-baseline {
+    align-items: baseline;
   }
   .items-center {
     align-items: center;
@@ -638,6 +647,11 @@
     --tw-space-y-reverse: 0;
     margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
     margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
+  }
+  :where(.space-y-2\.5 > :not(:last-child)) {
+    --tw-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 2.5) * var(--tw-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 2.5) * calc(1 - var(--tw-space-y-reverse)));
   }
   :where(.space-y-3 > :not(:last-child)) {
     --tw-space-y-reverse: 0;
@@ -798,8 +812,8 @@
   .\!px-2 {
     padding-inline: calc(var(--spacing) * 2) !important;
   }
-  .\!px-4 {
-    padding-inline: calc(var(--spacing) * 4) !important;
+  .\!px-3\.5 {
+    padding-inline: calc(var(--spacing) * 3.5) !important;
   }
   .px-1 {
     padding-inline: var(--spacing);
@@ -815,6 +829,9 @@
   }
   .\!py-0 {
     padding-block: 0px !important;
+  }
+  .\!py-1 {
+    padding-block: var(--spacing) !important;
   }
   .\!py-2 {
     padding-block: calc(var(--spacing) * 2) !important;
@@ -1108,9 +1125,6 @@
   }
   .line-through {
     text-decoration-line: line-through;
-  }
-  .underline {
-    text-decoration-line: underline;
   }
   .opacity-30 {
     opacity: 30%;
@@ -1928,6 +1942,135 @@ html.theme-light .cult-line{opacity:.4}
 html.hi-contrast .card{border-color:rgba(var(--ac-rgb),.45)}
 .toast-undo{margin-left:8px;padding:4px 10px;border-radius:10px;font-weight:700;font-size:12.5px;color:var(--ac-on);background:var(--ac);flex:none}
 .toast{align-items:center}
+/* ================= v9 · Nivel ================= */
+:root { --muted: #b8b0a6; --dim: #8f877e; }
+/* Encabezado compacto con cielo */
+.app-header { overflow: hidden; }
+.app-header::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .5; transition: background .6s ease, opacity .3s ease; }
+.app-header.sky-dawn::before { background: linear-gradient(115deg, rgba(212,154,135,.55), rgba(107,83,107,.35) 55%, transparent); }
+.app-header.sky-day::before { background: linear-gradient(115deg, rgba(115,159,193,.45), rgba(196,212,216,.12) 60%, transparent); }
+.app-header.sky-dusk::before { background: linear-gradient(115deg, rgba(168,94,84,.55), rgba(57,48,68,.4) 60%, transparent); }
+.app-header.sky-night::before { background: linear-gradient(115deg, rgba(23,36,59,.85), rgba(15,16,19,.2) 70%), radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 55% 60%, rgba(255,255,255,.7) 50%, transparent 51%), radial-gradient(1px 1px at 80% 25%, rgba(255,255,255,.8) 50%, transparent 51%); }
+.hdr-inner { padding-top: calc(var(--hdr-pad) + 8px); padding-bottom: 8px; transition: padding .2s ease; }
+.app-header .avatar { width: 38px; height: 38px; border-radius: 13px; font-size: 16px; }
+.app-header #greeting, .app-header #xpText { display: none; }
+.app-header #userName { font-size: 15.5px; }
+.app-header #xpBarWrap { width: 72px; height: 4px; margin-top: 0; }
+.app-header .mt-2 { margin-top: 6px; }
+.app-header .coin-pill { display: none; }
+.app-header.hdr-min .hdr-inner { padding-top: calc(var(--hdr-pad) + 4px); padding-bottom: 4px; }
+.app-header.hdr-min #xpBarWrap { display: none; }
+/* Barra inferior flotante de 5 botones */
+#capFab { display: none !important; }
+.tabbar.v9 { left: 12px; right: 12px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); padding-bottom: 0; border: 1px solid var(--line-2, rgba(214,204,192,.14)); border-radius: 22px; background: color-mix(in srgb, #17171b 92%, transparent); box-shadow: 0 20px 40px -18px rgba(0,0,0,.85); }
+.tabbar.v9 .wrap { display: flex !important; justify-content: space-around; align-items: center; gap: 2px; padding: 6px 4px; }
+.tabbar.v9 .tab { flex: 1 1 0; min-height: 52px; justify-content: center; font-size: 11px; color: var(--muted); }
+.tabbar.v9 .tab[hidden] { display: none; }
+.tabbar.v9 .tab[aria-current="page"] { color: var(--tc); background: rgba(48,40,32,.9); }
+.tabbar.v9 .tab[aria-current="page"]::after { display: none; }
+.tabbar.v9 .tab-plus .plus { width: 50px; height: 50px; border-radius: 17px; display: grid; place-items: center; font-size: 20px; color: var(--ac-on); background: linear-gradient(135deg, var(--ac-1), var(--ac-2)); box-shadow: 0 10px 24px -12px rgba(var(--ac-rgb), .9); }
+.tabbar.v9 .tab-plus { flex: 0 0 64px; }
+.tabbar.v9 .more-dot { position: absolute; top: 8px; right: calc(50% - 14px); width: 8px; height: 8px; border-radius: 50%; background: var(--rose); }
+.tabbar.v9 .badge-dot { min-width: 8px; width: 8px; height: 8px; padding: 0; font-size: 0; top: 8px; right: calc(50% - 14px); background: var(--rose); }
+.tab-hidden { display: none !important; }
+#main { padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
+.sos-fab { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); height: 44px; }
+.more-tile { position: relative; height: 92px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,.04); border: 1px solid var(--line); color: #f2ede6; font-weight: 700; font-size: 14px; }
+.more-tile i { font-size: 22px; color: var(--mc); }
+.more-tile[aria-current="page"] { border-color: var(--mc); background: rgba(48,40,32,.9); }
+.more-badge { position: absolute; top: 10px; right: 12px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 99px; background: var(--rose); color: #fff; font-size: 11px; font-weight: 800; display: grid; place-items: center; }
+/* Hoy: resumen con anillo y tarjeta Ahora */
+.sum-card { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border-radius: 22px; background: linear-gradient(180deg, var(--panel-a), var(--panel-b)); border: 1px solid var(--line); }
+.ring-wrap { position: relative; width: 76px; height: 76px; flex: none; }
+.ring-txt { position: absolute; inset: 0; display: flex; align-items: baseline; justify-content: center; padding-top: 24px; font-family: var(--font-display); }
+.ring-txt b { font-size: 22px; font-weight: 800; color: #fff; } .ring-txt small { font-size: 13px; color: var(--muted); }
+.view-enter .ring-fg { animation: ringIn .45s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ringIn { from { stroke-dashoffset: var(--c); } }
+.sum-stats { flex: 1; min-width: 0; display: grid; gap: 8px; }
+.sum-stats > * { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; text-align: left; }
+.sum-stats small { font-size: 12px; color: var(--muted); }
+.sum-stats b { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: #fff; white-space: nowrap; }
+.now-card { display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 22px; background: #211e1b; border: 1px solid rgba(var(--ac-rgb), .3); border-left: 3px solid var(--ac); }
+.now-card.is-over { border-left-color: var(--amber); }
+.now-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ac); box-shadow: 0 0 0 4px rgba(var(--ac-rgb), .2); }
+.now-card.is-over .now-dot { background: var(--amber); }
+.now-lbl { font-size: 11px; letter-spacing: .12em; font-weight: 800; color: var(--ac); }
+.now-title { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.15; color: #fff; }
+.btn-48 { min-height: 48px; }
+/* Modo Ahora */
+#nowMode { position: fixed; inset: 0; z-index: 90; background: radial-gradient(360px 360px at 50% 42%, rgba(var(--ac-rgb), .14), transparent 70%), #0b0c0e; }
+body.nm-open { overflow: hidden; }
+.nm-wrap { height: 100%; max-width: 480px; margin: 0 auto; box-sizing: border-box; padding: calc(env(safe-area-inset-top, 0px) + 18px) 20px calc(env(safe-area-inset-bottom, 0px) + 24px); display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+.nm-top { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+.nm-eyebrow { font-size: 11px; letter-spacing: .18em; font-weight: 800; color: var(--muted); }
+.nm-title { font-family: var(--font-display); font-weight: 800; font-size: 32px; line-height: 1.1; color: #fff; max-width: 340px; }
+.nm-ring { position: relative; width: 240px; height: 240px; }
+.nm-time { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.nm-time span { font-family: var(--font-display); font-weight: 700; font-size: 54px; color: #fff; letter-spacing: -.02em; }
+.nm-time small { font-size: 13px; color: var(--muted); max-width: 180px; }
+.nm-done { min-height: 58px; font-size: 16px; }
+/* Línea del tiempo: ahora y huecos */
+.dl-now, .tl-now { position: relative; height: 0; margin: 6px 0; border-top: 2px solid var(--ac); box-shadow: 0 0 10px rgba(var(--ac-rgb), .6); }
+.dl-now span, .tl-now span { position: absolute; left: 0; top: -10px; padding: 0 6px; border-radius: 6px; background: var(--ac); color: var(--ac-on); font-size: 11px; font-weight: 800; }
+.dl-now { margin-left: -18px; } .dl-now span { left: auto; right: 0; }
+.dl-gap { margin: 2px 0 2px 0; padding: 7px 12px; border-radius: 12px; background: #17181c; color: var(--muted); font-size: 12.5px; }
+.tl-row { position: relative; }
+.tl-item.work { border-left: 3px solid #91a9c6; } .tl-item.task { border-left: 3px solid #e9b463; } .tl-item.routine { border-left: 3px solid #8fbf9f; } .tl-item.gap { background: #17181c !important; }
+.wk-strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.wk-strip button { position: relative; min-height: 52px; border-radius: 14px; background: rgba(255,255,255,.03); border: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; color: var(--muted); }
+.wk-strip small { font-size: 10.5px; font-weight: 700; } .wk-strip b { font-family: var(--font-display); font-size: 15px; color: #e8e2d8; }
+.wk-strip i { position: absolute; bottom: 5px; width: 16px; height: 3px; border-radius: 3px; background: var(--ac); }
+.wk-strip button.is-today b { color: var(--ac); }
+.wk-strip button[aria-pressed="true"] { background: var(--ac); border-color: transparent; color: var(--ac-on); }
+.wk-strip button[aria-pressed="true"] b { color: var(--ac-on); } .wk-strip button[aria-pressed="true"] i { background: var(--ac-on); }
+/* Dinero en columnas */
+.lad-big { font-family: var(--font-display); font-weight: 800; font-size: 28px; color: #fff; } .lad-big small { font-size: 14px; font-weight: 600; color: var(--muted); }
+.lad-cols { display: grid; gap: 8px; align-items: end; }
+.lad-col { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 0; }
+.lad-pct { font-size: 12px; font-weight: 700; }
+.lad-bar { position: relative; width: 100%; max-width: 46px; height: 112px; border-radius: 10px; background: rgba(214,204,192,.08); overflow: hidden; }
+.lad-bar.empty { border: 1px dashed rgba(214,204,192,.2); box-sizing: border-box; }
+.lad-bar i { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 0 0 10px 10px; }
+.view-enter .lad-bar i { animation: ladIn .5s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ladIn { from { height: 0 !important; transform: scaleY(0); transform-origin: bottom; } }
+.lad-name { font-size: 11.5px; color: #e8e2d8; font-weight: 600; text-align: center; }
+.lad-amt { font-size: 11px; color: #e8e2d8; text-align: center; line-height: 1.25; } .lad-amt span { color: var(--muted); }
+/* Lectura: más aire y letra mínima */
+#main .text-\[10px\], #main .text-\[10\.5px\], #main .text-\[11px\], #main .text-\[11\.5px\] { font-size: 12px !important; }
+#main .card { padding: 18px; }
+@media (prefers-reduced-motion: reduce) { .view-enter .ring-fg, .view-enter .lad-bar i { animation: none; } }
+html.theme-light .now-card { background: #fbf6ee; } html.theme-light .dl-gap, html.theme-light .tl-item.gap { background: #efe9e1 !important; }
+html.theme-light .tabbar.v9 { background: rgba(255,255,255,.95); } html.theme-light .more-tile { color: var(--fg); } html.theme-light #nowMode { background: #f6f2ec; }
+html.theme-light .nm-title, html.theme-light .nm-time span, html.theme-light .now-title, html.theme-light .sum-stats b, html.theme-light .lad-big, html.theme-light .ring-txt b { color: var(--fg); }
+#ladCols.card-neon { border-color: var(--line); box-shadow: none; }
+/* v9 · Prisma 2 */
+.pr-head { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.pr-orb { position: relative; width: 112px; height: 112px; border-radius: 50%; border: 0; background: transparent; padding: 0; }
+.pr-orb-glow { position: absolute; inset: -19px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--ac-rgb), .28), transparent 65%); }
+.pr-orb-core { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, #e9b463, #d7a6a0, #b98ae0, #7fb8e0, #8fbf9f, #e9b463); filter: blur(8px); opacity: .9; animation: orbSpin 12s linear infinite; }
+.pr-orb-shine { position: absolute; inset: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), rgba(255,255,255,.06) 40%, rgba(15,16,19,.55) 75%); }
+.pr-orb svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pr-orb { animation: orbBreath 3s ease-in-out infinite; }
+.pr-orb.listening { animation: orbBreath 1.2s ease-in-out infinite; }
+.pr-orb.listening .pr-orb-glow { background: radial-gradient(circle, rgba(var(--ac-rgb), .5), transparent 65%); }
+@keyframes orbSpin { to { transform: rotate(360deg); } }
+@keyframes orbBreath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .pr-orb, .pr-orb-core { animation: none; } }
+.pr-chat { display: flex; flex-direction: column; gap: 8px; max-height: 38vh; min-height: 90px; overflow-y: auto; padding: 2px; }
+.pr-msg { max-width: 88%; padding: 10px 14px; font-size: 14px; line-height: 1.4; }
+.pr-me { align-self: flex-end; background: #302b28; color: #f2ede6; border-radius: 18px 18px 6px 18px; }
+.pr-bot { align-self: flex-start; background: #1c2020; color: #f2ede6; border: 1px solid rgba(214,204,192,.1); border-radius: 18px 18px 18px 6px; }
+.pr-bot button:disabled { opacity: .45; pointer-events: none; }
+.pr-spend { padding: 8px 0; border-top: 1px solid rgba(214,204,192,.08); }
+.pr-acts { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color: #e8e2d8; list-style: disc; }
+.pr-dots { display: inline-flex; gap: 4px; } .pr-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: prDot 1s infinite ease-in-out; } .pr-dots i:nth-child(2) { animation-delay: .15s; } .pr-dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes prDot { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+.pr-input { display: flex; align-items: center; gap: 8px; padding: 5px 5px 5px 16px; border-radius: 999px; background: #1c1c21; border: 1px solid rgba(214,204,192,.14); }
+.pr-input input { flex: 1; min-width: 0; height: 40px; border: 0; background: transparent; color: #f2ede6; font-size: 15px; outline: none; }
+.pr-send { width: 44px; height: 44px; border-radius: 50%; background: var(--ac); color: var(--ac-on); display: grid; place-items: center; flex: none; }
+.ai-steps { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.5; color: #e8e2d8; list-style: decimal; }
+html.theme-light .pr-me { background: #efe6da; color: var(--fg); } html.theme-light .pr-bot { background: #fff; color: var(--fg); } html.theme-light .pr-input { background: #fff; } html.theme-light .pr-input input { color: var(--fg); }
+.pr-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; } .pr-chips::-webkit-scrollbar { display: none; } .pr-chips .chip-btn { flex: none; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -1950,7 +2093,7 @@ html.hi-contrast .card{border-color:rgba(var(--ac-rgb),.45)}
     </button>
     <div class="flex items-center gap-1.5 flex-none">
       <div class="stat-pill" aria-label="Racha diaria"><i class="fa-solid fa-fire text-orange-400"></i><span id="streakCount" class="num text-orange-300">0</span></div>
-      <button class="stat-pill" data-act="tab" data-tab="progreso" aria-label="Monedas, ir a premios"><span aria-hidden="true">🪙</span><span id="coinsCount" class="num text-amber-300">0</span></button>
+      <button class="stat-pill coin-pill" data-act="tab" data-tab="progreso" aria-label="Monedas, ir a premios"><span aria-hidden="true">🪙</span><span id="coinsCount" class="num text-amber-300">0</span></button>
       <button class="stat-pill pr-pill" data-act="prismaOpen" aria-label="Hablar con Prisma"><i class="fa-solid fa-microphone"></i></button>
       <button class="stat-pill relative" data-act="bellOpen" aria-label="Avisos pendientes"><i class="fa-solid fa-bell muted"></i><span id="bellCount" class="bell-count" hidden>0</span></button>
       <button class="stat-pill" data-act="openSystem" aria-label="Ajustes y sistema"><i class="fa-solid fa-gear muted"></i></button>
@@ -1963,11 +2106,11 @@ html.hi-contrast .card{border-color:rgba(var(--ac-rgb),.45)}
   <!-- ============ HOY ============ -->
   <section id="view-hoy" data-view="hoy" class="space-y-3">
     <div id="hoyHero"></div>
-    <div id="hoyTop" class="space-y-2"></div>
-    <div id="hoyDay"></div>
-    <div id="hoyQuick"></div>
+    <div id="hoyDay" class="space-y-3"></div>
     <div id="hoyNow" class="space-y-2"></div>
+    <div id="hoyTop" class="space-y-2"></div>
     <div id="hoyLine"></div>
+    <div id="hoyQuick"></div>
 
     <div class="card blk" style="--bc:233, 180, 99" id="missionsBlock">
       <div class="flex items-center justify-between gap-2">
@@ -2193,14 +2336,18 @@ html.hi-contrast .card{border-color:rgba(var(--ac-rgb),.45)}
 <button id="sosFab" class="sos-fab" data-act="sosOpen" aria-label="Modo SOS: una sola cosa a la vez"><i class="fa-solid fa-life-ring"></i> SOS</button>
 <button id="capFab" class="cap-fab" data-act="quickMenu" aria-label="Menú rápido"><i class="fa-solid fa-plus"></i></button>
 
-<nav class="tabbar" aria-label="Secciones">
+<nav class="tabbar v9" aria-label="Secciones">
   <div class="wrap">
     <button class="tab" data-act="tab" data-tab="hoy" style="--tc:#e9b463"><i class="fa-solid fa-sun"></i><span>Hoy</span><span class="tdot"></span><span class="badge-dot" data-badge="hoy" hidden></span></button>
     <button class="tab" data-act="tab" data-tab="agenda" style="--tc:#8fb0d4"><i class="fa-solid fa-calendar-days"></i><span>Agenda</span><span class="tdot"></span><span class="badge-dot" data-badge="agenda" hidden></span></button>
-    <button class="tab tab-mente" data-act="tab" data-tab="mente" style="--tc:#d9b86a"><i class="fa-solid fa-yin-yang"></i><span>Mente</span><span class="tdot"></span><span class="badge-dot" data-badge="mente" hidden></span></button>
+    <button class="tab tab-plus" data-act="quickMenu" aria-label="Agregar o hacer algo rápido"><span class="plus"><i class="fa-solid fa-plus"></i></span></button>
     <button class="tab" data-act="tab" data-tab="finanzas" style="--tc:#a9c99a"><i class="fa-solid fa-wallet"></i><span>Dinero</span><span class="tdot"></span><span class="badge-dot" data-badge="finanzas" hidden></span></button>
-    <button class="tab" data-act="tab" data-tab="casa" style="--tc:#d8a27a"><i class="fa-solid fa-house-chimney"></i><span>Casa</span><span class="tdot"></span><span class="badge-dot" data-badge="casa" hidden></span></button>
-    <button class="tab" data-act="tab" data-tab="cuerpo" style="--tc:#9cc3dd"><i class="fa-solid fa-person-running"></i><span>Cuerpo</span><span class="tdot"></span><span class="badge-dot" data-badge="cuerpo" hidden></span></button>
+    <button class="tab tab-more" data-act="moreOpen" aria-label="Más secciones: Mente, Casa, Cuerpo, Progreso y Ajustes" style="--tc:#e9b463"><i class="fa-solid fa-grip"></i><span>Más</span><span class="tdot"></span><span class="more-dot" hidden></span></button>
+    <span class="tab-hidden" hidden>
+      <button class="tab tab-mente" data-act="tab" data-tab="mente" tabindex="-1"><span class="badge-dot" data-badge="mente" hidden></span></button>
+      <button class="tab" data-act="tab" data-tab="casa" tabindex="-1"><span class="badge-dot" data-badge="casa" hidden></span></button>
+      <button class="tab" data-act="tab" data-tab="cuerpo" tabindex="-1"><span class="badge-dot" data-badge="cuerpo" hidden></span></button>
+    </span>
   </div>
 </nav>
 
@@ -2218,7 +2365,7 @@ html.hi-contrast .card{border-color:rgba(var(--ac-rgb),.45)}
 /* =========================================================
    CONFIGURACIÓN
    ========================================================= */
-const APP_VERSION = '8.0.0';
+const APP_VERSION = '9.0.0';
 /* Huella (SHA-256) del correo del dueño: solo esa cuenta ve el Modo creador. No guarda el correo en texto. */
 const OWNER_HASH = '47d538ce808d885cef7fcfd5718ccc10ad89582a4302e3abaa40002f40ed3065';
 const EXT_KEY = 'centro_tdah_ext';
@@ -2953,6 +3100,7 @@ function renderAll(full) {
   safeRender('v5', renderV5Chrome);
   if (typeof sectionsApply === 'function') sectionsApply();
   if (typeof v83After === 'function') v83After();
+  if (typeof v9After === 'function') v9After();
   if (typeof runHook === 'function') runHook('render', ui.tab);
   if (typeof animateCounts === 'function') animateCounts();
   flushLevelUp();
@@ -3010,13 +3158,13 @@ function renderHoyTop() {
       <p class="text-[12.5px] muted">Hoy solo cuentan ${plural(state.pause.items.length, 'cosa mínima', 'cosas mínimas')}. Tu racha está protegida y las tareas sin hacer pasaron a mañana.</p>
     </div>`);
   }
-  if (state.meta.onboarded && state.meta.seenVer !== '8.0') { state.meta.news5 = true; state.meta.seenVer = '8.0'; }
+  if (state.meta.onboarded && state.meta.seenVer !== '9.0') { state.meta.news5 = true; state.meta.seenVer = '9.0'; }
   if (state.meta.news5 || state.meta.news4) {
     parts.push(`<div class="card card-neon space-y-3">
       <div class="flex items-start gap-3">
         <div class="cult-mark">${SEC_CULTURE.hoy.mark}</div>
         <div class="flex-1 min-w-0"><p class="font-display font-bold text-[15px] text-white">Bienvenido a la versión ${esc(APP_VERSION.split('.').slice(0, 2).join('.'))}</p>
-        <p class="text-[12.5px] muted leading-snug mt-0.5">Ahora se llama Control y tiene a Prisma: toca el micrófono y háblale. Hay registro emocional guiado, gimnasio con pesos, proteína, agua y sueño, fechas importantes, ropa, vencimientos y tema claro. Puedes apagar cualquier sección. Haz la guía para verlo todo.</p></div>
+        <p class="text-[12.5px] muted leading-snug mt-0.5">Nuevo diseño: tu día con anillo y la tarjeta «Ahora», el Modo Ahora para arrancar, la escalera en columnas y una barra de abajo con «Más». Prisma entiende correcciones, varias órdenes a la vez y preguntas sobre tus datos, y puedes conectarle una IA. Haz la guía para verlo.</p></div>
         <button class="icon-btn" data-act="newsDismiss" aria-label="Ocultar novedades"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <button class="btn btn-primary btn-sm w-full" data-act="guide"><i class="fa-solid fa-hand-pointer"></i> Hacer la guía interactiva</button>
@@ -7873,17 +8021,7 @@ function openDayItem(key) {
     actions: []
   });
 }
-function dayStart(key) {
-  const e = dayPlan().find(x => x.key === key);
-  if (!e) return;
-  const dur = e.start != null ? Math.max(5, (e.end || e.start) - e.start) : (e.dur || 15);
-  closeModal();
-  ui.dayTimerKey = key;
-  setTimerMode('focus', Math.min(dur, 120), String(e.title).slice(0, 40));
-  state.timer.task = { kind: 'day', id: key };
-  save(); startTimer();
-  openTimerSheet();
-}
+
 
 /* ---------- La línea de hoy (reemplaza misiones + línea) ---------- */
 function rowHTML(e, now) {
@@ -7974,38 +8112,7 @@ function nextDayEntry() {
   const later = plan.find(e => e.start != null && e.start > now);
   return later ? [later, 'luego'] : [null, ''];
 }
-function renderHoyDay() {
-  const box = $('#hoyDay');
-  if (!box) return;
-  const plan = dayPlan();
-  const core = plan.filter(e => e.checkable && !e.optional && !e.skipped);
-  const doneN = core.filter(e => e.done).length;
-  const pct = core.length ? Math.round(doneN / core.length * 100) : 0;
-  const pend = core.length - doneN;
-  const sp = typeof todaySpend === 'function' ? todaySpend() : null;
-  const free = freeMinutesLeft();
-  const [next, why] = nextDayEntry();
-  const status = isPaused() ? ['Día de pausa', 'ok'] : pct >= 80 ? ['Bajo control', 'ok'] : pct >= 40 ? ['En marcha', 'warn'] : ['Recién partiendo', ''];
-  const R = 22, C = 2 * Math.PI * R;
-  const now = nowMin();
-  const label = { ahora: 'Ahora', over: 'Se pasó la hora', pronto: `A las ${next && next.start != null ? minToHHMM(next.start) : ''}`, libre: 'Cuando puedas hoy', luego: `Más tarde · ${next && next.start != null ? minToHHMM(next.start) : ''}` }[why] || '';
-  box.innerHTML = `<div class="card blk glow" style="--bc:233, 180, 99">
-    <div class="flex items-center justify-between"><h2 class="eyebrow">Tu día</h2><span class="pill ${status[1]}">${status[0]}</span></div>
-    <div class="grid grid-cols-[auto_1fr_1fr_1fr] items-center gap-3 mt-3">
-      <svg width="54" height="54" viewBox="0 0 54 54" aria-label="${pct} % del día"><circle cx="27" cy="27" r="${R}" fill="none" stroke="rgba(214,204,192,.12)" stroke-width="5"/><circle cx="27" cy="27" r="${R}" fill="none" stroke="var(--ac)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct / 100)}" transform="rotate(-90 27 27)"/><text x="27" y="31" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">${pct}%</text></svg>
-      <div class="stat-n"><span class="num">${pend}</span><small>pendientes</small></div>
-      <div class="stat-n"><span class="num">${free === null ? '—' : free >= 60 ? `${Math.floor(free / 60)}h${free % 60 ? ' ' + (free % 60) + 'm' : ''}` : free + 'm'}</span><small>libres hasta dormir</small></div>
-      ${secOn('finanzas.ocio') ? `<button class="stat-n" data-act="tab" data-tab="finanzas"><span class="num" style="color:${sp && sp.left < 0 ? 'var(--rose)' : 'var(--mint)'}">${sp ? clpShort(sp.left) : '—'}</span><small>ocio hoy</small></button>` : '<div></div>'}
-    </div>
-    ${next ? `<div class="next-act mt-4">
-      <p class="text-[11px] tracking-[.14em] uppercase" style="color:${why === 'over' ? 'var(--amber)' : '#8fb0d4'}">Siguiente acción · ${esc(label)}</p>
-      <div class="flex items-center gap-2 mt-1">${secIconHTML(next.sec)}<p class="font-display font-bold text-[19px] text-white leading-snug flex-1 min-w-0">${esc(next.title)}</p></div>
-      ${why === 'over' ? `<div class="grid grid-cols-3 gap-2 mt-3"><button class="btn btn-mint btn-sm" data-act="dayDo" data-key="${esc(next.key)}"><i class="fa-solid fa-check"></i> Hecho</button><button class="btn btn-ghost btn-sm" data-act="dayMove" data-key="${esc(next.key)}"><i class="fa-solid fa-clock"></i> Mover</button><button class="btn btn-ghost btn-sm" data-act="daySkip" data-key="${esc(next.key)}"><i class="fa-solid fa-forward"></i> Hoy no</button></div>`
-      : `<div class="grid grid-cols-[1fr_auto] gap-2 mt-3"><button class="btn btn-primary" data-act="dayStart" data-key="${esc(next.key)}"><i class="fa-solid fa-play"></i> Comenzar</button><button class="btn btn-mint" data-act="dayDo" data-key="${esc(next.key)}" aria-label="Marcar hecho"><i class="fa-solid fa-check"></i> Hecho</button></div>`}
-    </div>` : `<p class="text-[13px] muted mt-3">Nada pendiente. Disfrútalo sin culpa.</p>`}
-  </div>`;
-  ui.nextCand = next || null;
-}
+
 function renderHoy() {
   pruneDayX();
   if (typeof renderHoyHero === 'function') renderHoyHero();
@@ -11354,7 +11461,7 @@ obFinish = function (thenLogin) {
   _obFinish(thenLogin);
   Object.assign(state.profile, extra);
   state.prefs = state.prefs || {}; state.prefs.off = off;
-  state.meta.seenVer = '8.0';
+  state.meta.seenVer = '9.0';
   save();
   obClearProgress();
   renderAll();
@@ -11389,17 +11496,19 @@ Object.assign(V5_ACTIONS, {
 
 /* ---------- Guía interactiva: ilumina el botón real y te dice qué tocar ---------- */
 const TOUR = [
-  { tab: 'hoy', sel: '#hoyDay', t: 'Tu día', d: 'Arriba ves cuánto llevas, cuánto tiempo libre te queda hasta dormir y tu ocio de hoy. Abajo, tu siguiente acción con su botón Comenzar.' },
+  { tab: 'hoy', sel: '#hoyDay', t: 'Tu día', d: 'El anillo muestra cuánto llevas. Abajo, la tarjeta «Ahora» con lo que toca: «Empezar» abre el Modo Ahora, una pantalla con solo esa tarea y un temporizador.' },
   { tab: 'hoy', sel: '#hoyLine .energy-compact', t: 'Cómo estás hoy', d: 'Marca rojo, amarillo o verde. Con rojo tu día se aliviana; con verde aparecen tareas opcionales. Pruébalo: toca uno.', tap: true },
   { tab: 'hoy', sel: '#hoyLine .day-line, #hoyLine', t: 'La línea de hoy', d: 'Todo lo de tu día, en orden. Marca solo con el cuadrito de la derecha. Si tocas el nombre, puedes moverlo de hora o dejarlo para otro día.' },
   { tab: 'hoy', sel: '.pr-pill', t: 'Prisma, tu asistente', d: 'Toca el micrófono y háblale como a una persona: «gasté 3 mil en pan», «¿qué sigue?», «recuérdame pagar la luz mañana a las 10». Antes de tocar tu dinero, siempre te pregunta.', need: 'prisma.voz' },
-  { tab: 'hoy', sel: '#capFab', t: 'El botón +', d: 'Tu menú rápido: anotar algo para no olvidarlo, un gasto, una actividad nueva, «voy a salir» o «ir al súper». Tócalo para verlo.', tap: true },
+  { tab: 'hoy', sel: '.tab-plus', t: 'El botón +', d: 'Tu menú rápido: anotar algo para no olvidarlo, un gasto, una actividad nueva, «voy a salir» o «ir al súper».' },
+  { tab: 'hoy', sel: '.tab-more', t: 'Más', d: 'Aquí están Mente, Casa, Cuerpo, Progreso, Ajustes y Buscar. Un punto rojo te avisa si algo de ahí te espera.' },
   { tab: 'agenda', sel: '#view-agenda', t: 'Agenda', d: 'Tu semana completa. Desde aquí agendas cosas, repites rutinas, ordenas la semana y la exportas a Google Calendar.', need: 'agenda' },
   { tab: 'finanzas', sel: '#ritualsCard', t: 'Tu dinero por escalones', d: 'Cuando te paguen, toca «Llegó dinero». La app reparte sola: primero lo importante, después metas, premios y ocio.', need: 'finanzas' },
   { tab: 'finanzas', sel: '#spendCard', t: 'Ocio sin culpa', d: 'Tu monto para gustos, repartido por día. Lo que no gastas hoy queda para después.', need: 'finanzas.ocio' },
   { tab: 'casa', sel: '#view-casa .btn-primary', t: 'Ir al súper', d: 'Tu lista se llena sola antes de que algo se acabe. Aquí armas el carrito y la app recuerda los precios por tienda.', need: 'casa' },
+  { tab: 'finanzas', sel: '#ladCols', t: 'La escalera de un vistazo', d: 'Cada columna es un escalón: se llena en orden con lo que te llega. Debajo ves cuánto falta.', need: 'finanzas' },
   { tab: 'mente', sel: '#view-mente .btn-primary', t: 'Cómo te sientes', d: 'Un toque para registrar tu emoción. Con unos días de registros, el laboratorio empieza a mostrarte tus patrones.', need: 'mente' },
-  { tab: 'hoy', sel: '#capFab', t: '¡Listo!', d: 'Eso es lo esencial. Cada sección tiene más cosas que irás descubriendo. Puedes repetir esta guía desde Ajustes.' }
+  { tab: 'hoy', sel: '#hoyDay', t: '¡Listo!', d: 'Eso es lo esencial. Cada sección tiene más cosas que irás descubriendo. Puedes repetir esta guía desde Ajustes.' }
 ];
 let tourIdx = -1;
 function tourActive() { return tourIdx >= 0; }
@@ -11612,11 +11721,7 @@ const PR_CATS = [
   ['hogar', /\b(?:hogar|mueble|ampolleta|limpieza|detergente|cloro|casa)/],
   ['comida', /\b(?:almuerzo|comida|colacion|cena|desayuno|restaurant)/]
 ];
-function prCategory(t) {
-  if (PR_OCIO_WORDS.test(t) && !/(super|lider|santa isabel|jumbo|unimarc|tottus)/.test(t)) return 'gustos';
-  const c = PR_CATS.find(([, re]) => re.test(t));
-  return c ? c[0] : 'otro';
-}
+
 function prOcioSub(t) {
   if (/(papas|snack|dulce|chocolate|galleta|helado)/.test(t)) return 'snacks';
   if (/(bebida|coca|jugo|energetica|cerveza|copete|trago)/.test(t)) return 'bebidas';
@@ -11636,6 +11741,8 @@ function prCleanNote(raw, kill) {
     .replace(/(\s+(en|de|el|la|para|a|y|por|con))+\s*$/, ' ')
     .replace(/\s+/g, ' ').trim();
   s = s.replace(/^(en|de|para|el|la)\s+/, '').trim();
+  const orig = String(raw || '').split(/\s+/).map(o => o.replace(/[¿?¡!,.;:«»"]/g, '')).filter(Boolean);
+  s = s.split(' ').map(w => { const o = orig.find(x => prNorm(x) === w); return o ? o.toLowerCase() : w; }).join(' ');
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 }
 
@@ -11698,19 +11805,7 @@ function prSay(text) {
 let prVoices = [];
 function prLoadVoices() { try { prVoices = speechSynthesis.getVoices().filter(v => /^es/i.test(v.lang)); } catch (e) { prVoices = []; } return prVoices; }
 if ('speechSynthesis' in window) { prLoadVoices(); try { speechSynthesis.onvoiceschanged = prLoadVoices; } catch (e) { /* nada */ } }
-function prismaSpeak(text, force) {
-  try {
-    const c = pr().cfg;
-    if ((!c.speak && !force) || !('speechSynthesis' in window)) return;
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(prSay(text));
-    const vs = prVoices.length ? prVoices : prLoadVoices();
-    const v = vs.find(x => x.name === c.voice) || vs.find(x => /es[-_](419|US|MX|CL)/i.test(x.lang)) || vs[0];
-    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'es-419';
-    u.rate = Math.min(1.5, Math.max(0.6, Number(c.rate) || 1));
-    speechSynthesis.speak(u);
-  } catch (e) { /* nada */ }
-}
+
 function prismaStopSpeak() { try { speechSynthesis.cancel(); } catch (e) { /* nada */ } }
 
 /* ---------- Consultas ---------- */
@@ -11794,6 +11889,7 @@ function prismaReport(which) {
     if (secOn('cuerpo.salud') && typeof protGoal === 'function') L.push(`Proteína: ${protDay().g} de ${protGoal()} gramos. Agua: ${(state.body.water || {})[k] || 0} de ${waterGoal()} vasos.`);
     L.push(typeof toneTxt === 'function' ? toneTxt(`Descansa. Para dormir a tiempo, acuéstate a las ${state.schedule.sleep}.`, `A dormir a las ${state.schedule.sleep}.`, `Para dormir a tiempo, acuéstate a las ${state.schedule.sleep}.`) : `Para dormir a tiempo, acuéstate a las ${state.schedule.sleep}.`);
   }
+  if (which === 'n' && typeof prPatternTip === 'function') { const tp = prPatternTip(); if (tp) L.splice(L.length - 1, 0, tp); }
   const p = pr(); p.seen[which] = k; save();
   return L.join(' ');
 }
@@ -11870,19 +11966,12 @@ let prPending = null;
 let prRec = null;
 let prListening = false;
 const PR_EXAMPLES = ['¿Cuánto ocio me queda?', 'Gasté dos mil quinientos en una bebida', 'Recuérdame pagar la luz mañana a las 10', '¿Qué sigue?', 'Tomé 2 vasos de agua', 'Agrega pan a la lista', 'Temporizador de 10 minutos'];
-function prOut(html, say) {
-  const o = $('#prOut');
-  if (o) { o.innerHTML = html; o.hidden = false; o.classList.remove('view-enter'); void o.offsetWidth; o.classList.add('view-enter'); }
-  if (say) prismaSpeak(say);
-}
-function prBubble(text, extra) { return `<div class="env !p-3 space-y-2"><p class="text-[14px] text-white leading-snug"><i class="fa-solid fa-wand-magic-sparkles ac mr-1"></i> ${text}</p>${extra || ''}</div>`; }
-function prConfirmBox(text, okLabel) {
-  return prBubble(text, `<div class="grid grid-cols-2 gap-2"><button class="btn btn-ghost btn-sm" data-act="prismaNo"><i class="fa-solid fa-xmark"></i> No</button><button class="btn btn-primary btn-sm" data-act="prismaYes"><i class="fa-solid fa-check"></i> ${okLabel || 'Sí, hazlo'}</button></div>`);
-}
-function prismaHandle(raw) {
+
+
+
+function prismaHandleBase(raw) {
   const q = String(raw || '').trim();
   if (!q) return;
-  const you = $('#prYou'); if (you) { you.textContent = '«' + q + '»'; you.hidden = false; }
   const P = prismaParse(q);
   prPending = null;
   const ans = (t) => prOut(prBubble(esc(t)), t);
@@ -11935,6 +12024,7 @@ function prismaHandle(raw) {
         prOut(prBubble(`Agendado ✓ ${esc(P.title)}, ${esc(prTaskWhen(P.date, P.time))}.${P.time != null ? ' Te aviso 5 minutos antes.' : ''}`), 'Agendado.');
       });
     default:
+      if (typeof prismaUnknown === 'function') return prismaUnknown(q);
       prPending = () => prDoInbox(q);
       return prOut(prConfirmBox('No te entendí bien. ¿Lo guardo en tu bandeja para verlo después?', 'Guardar'), 'No te entendí bien. ¿Lo guardo en tu bandeja?');
   }
@@ -12001,29 +12091,7 @@ function prismaListen() {
 }
 
 /* ---------- Ventana de Prisma ---------- */
-function openPrisma(prefill) {
-  if (!secOn('prisma.voz')) { toast('Prisma está apagado en Ajustes → Secciones.', 'info'); return; }
-  prPending = null;
-  openModal({
-    title: 'Prisma',
-    html: `<div class="flex flex-col items-center gap-2 pt-1">
-        <button id="prMic" class="pr-mic" data-act="prismaListen" aria-label="Hablar con Prisma"><i class="fa-solid fa-microphone"></i></button>
-        <p id="prHint" class="text-[12.5px] muted text-center">${prSR() ? 'Toca para hablar' : 'Escribe tu orden abajo'}</p>
-        <p id="prYou" class="text-[13px] text-slate-300 text-center italic" hidden></p>
-      </div>
-      <div id="prOut" hidden></div>
-      <div class="flex gap-2"><input id="prText" class="field flex-1" maxlength="160" placeholder="O escríbelo aquí…" enterkeyhint="send"><button class="btn btn-primary btn-sm !px-4" data-act="prismaSend" aria-label="Enviar"><i class="fa-solid fa-paper-plane"></i></button></div>
-      <div class="flex flex-wrap gap-1.5">${PR_EXAMPLES.map(x => `<button class="chip-btn !text-[11.5px]" data-act="prismaEx">${esc(x)}</button>`).join('')}</div>
-      <button class="text-[12px] muted underline w-full text-center" data-act="prismaCfg"><i class="fa-solid fa-sliders"></i> Voz y piloto automático</button>`,
-    onOpen: root => {
-      const i = root.querySelector('#prText');
-      if (i) i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); const v = i.value; i.value = ''; prismaHandle(v); } });
-      if (prefill) setTimeout(() => prismaHandle(prefill), 30);
-    },
-    onClose: () => { if (prRec) try { prRec.abort(); } catch (e) { /* nada */ } prListening = false; },
-    actions: []
-  });
-}
+
 function openPrismaReport(which) {
   const t = prismaReport(which);
   openModal({
@@ -13769,6 +13837,795 @@ Object.assign(V5_ACTIONS, {
   cartDrop: () => { ui.cart = null; cartPersist(); closeModal(); setTimeout(openSuper, 30); },
   repSet: el => { const c = pr().cfg; c[el.dataset.k] = Number(el.dataset.v); save(); $$(`[data-act="repSet"][data-k="${el.dataset.k}"]`).forEach(b => b.setAttribute('aria-pressed', String(b === el))); }
 });
+/* =========================================================
+   v9 · NIVEL — cómo se ve
+   Encabezado compacto con cielo según la hora, barra inferior
+   de 5 botones con «Más», Hoy con anillo y tarjeta «Ahora»,
+   Modo Ahora a pantalla completa, línea del tiempo con marca
+   de «ahora» y huecos libres, semana en la Agenda y la
+   escalera de dinero en columnas de colores.
+   ========================================================= */
+
+/* ---------- Cielo según la hora (encabezado) ---------- */
+function skyPhase() {
+  const h = new Date().getHours() + new Date().getMinutes() / 60;
+  const w = hhmmToMin(state.schedule.wake) / 60;
+  if (h >= 5 && h < Math.max(7, (isFinite(w) ? w : 7) + 1.5)) return 'dawn';
+  if (h >= 7 && h < 17.5) return 'day';
+  if (h >= 17.5 && h < 21) return 'dusk';
+  return 'night';
+}
+function applySky() {
+  const hd = $('#appHeader');
+  if (!hd) return;
+  const p = skyPhase();
+  ['dawn', 'day', 'dusk', 'night'].forEach(x => hd.classList.toggle('sky-' + x, x === p));
+}
+let hdrMinBound = false;
+function bindHeaderShrink() {
+  if (hdrMinBound) return;
+  hdrMinBound = true;
+  let last = false;
+  window.addEventListener('scroll', () => {
+    const on = window.scrollY > 36;
+    if (on !== last) { last = on; const hd = $('#appHeader'); if (hd) hd.classList.toggle('hdr-min', on); }
+  }, { passive: true });
+}
+
+/* ---------- Barra inferior: 5 botones y «Más» ---------- */
+const MORE_TABS = ['mente', 'casa', 'cuerpo', 'progreso', 'sistema'];
+function moreSync() {
+  const more = $('.tab-more');
+  if (!more) return;
+  if (MORE_TABS.includes(ui.tab)) more.setAttribute('aria-current', 'page'); else more.removeAttribute('aria-current');
+  const any = ['mente', 'casa', 'cuerpo'].some(t => { const b = $(`.tabbar [data-badge="${t}"]`); return b && !b.hidden && secOn(t); });
+  const dot = $('.more-dot');
+  if (dot) dot.hidden = !any;
+}
+function openMore() {
+  const items = [['mente', 'Mente', 'fa-yin-yang', '#d9b86a'], ['casa', 'Casa', 'fa-house-chimney', '#d8a27a'], ['cuerpo', 'Cuerpo', 'fa-person-running', '#9cc3dd'], ['progreso', 'Progreso', 'fa-trophy', '#e9b463'], ['sistema', 'Ajustes', 'fa-gear', '#b8b0a6']].filter(([k]) => k === 'sistema' || k === 'progreso' || secOn(k));
+  const badge = k => { const b = $(`.tabbar [data-badge="${k}"]`); return b && !b.hidden ? (b.textContent || '•') : ''; };
+  openModal({
+    title: 'Más secciones',
+    html: `<div class="grid grid-cols-2 gap-2.5">${items.map(([k, n, ic, c]) => `<button class="more-tile" data-act="moreGo" data-tab="${k}" style="--mc:${c}" aria-current="${ui.tab === k ? 'page' : 'false'}"><i class="fa-solid ${ic}"></i><span>${n}</span>${badge(k) ? `<span class="more-badge">${esc(badge(k))}</span>` : ''}</button>`).join('')}
+      <button class="more-tile" data-act="searchOpen" style="--mc:#b8b0a6"><i class="fa-solid fa-magnifying-glass"></i><span>Buscar</span></button></div>`,
+    actions: []
+  });
+}
+
+/* ---------- Hoy: anillo + tarjeta «Ahora» ---------- */
+function renderHoyDay() {
+  const box = $('#hoyDay');
+  if (!box) return;
+  const plan = dayPlan();
+  const core = plan.filter(e => e.checkable && !e.optional && !e.skipped);
+  const doneN = core.filter(e => e.done).length;
+  const tot = core.length;
+  const pct = tot ? doneN / tot : 0;
+  const pend = tot - doneN;
+  const sp = typeof todaySpend === 'function' ? todaySpend() : null;
+  const free = freeMinutesLeft();
+  const [next, why] = nextDayEntry();
+  const R = 32, C = 2 * Math.PI * R;
+  const freeTxt = free === null ? '—' : free >= 60 ? `${Math.floor(free / 60)} h${free % 60 ? ' ' + (free % 60) + ' min' : ''}` : free + ' min';
+  const label = { ahora: 'AHORA', over: 'SE PASÓ LA HORA', pronto: `A LAS ${next && next.start != null ? minToHHMM(next.start % 1440) : ''}`, libre: 'CUANDO PUEDAS HOY', luego: `MÁS TARDE · ${next && next.start != null ? minToHHMM(next.start % 1440) : ''}` }[why] || '';
+  const now = nowMin();
+  const right = next && why === 'ahora' && next.start != null ? `quedan ${fmtCountdown(Math.max(0, planEnd(next) - now))}` : next && why === 'pronto' ? `en ${fmtCountdown(Math.max(0, next.start - now))}` : '';
+  const dur = next ? (next.start != null ? Math.max(5, (next.end || next.start) - next.start) : (next.dur || 15)) : 0;
+  box.innerHTML = `<div class="sum-card">
+      <div class="ring-wrap" role="img" aria-label="Llevas ${doneN} de ${tot} cosas del día">
+        <svg width="76" height="76" viewBox="0 0 76 76" aria-hidden="true"><circle cx="38" cy="38" r="${R}" fill="none" stroke="#343037" stroke-width="7"/><circle class="ring-fg" cx="38" cy="38" r="${R}" fill="none" stroke="var(--ac)" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct)}" style="--c:${C}" transform="rotate(-90 38 38)"/></svg>
+        <span class="ring-txt"><b class="num">${doneN}</b><small class="num">/${tot}</small></span>
+      </div>
+      <div class="sum-stats">
+        <div><small>Pendientes</small><b class="num">${pend}</b></div>
+        <div><small>Libre hasta dormir</small><b class="num">${freeTxt}</b></div>
+        ${secOn('finanzas.ocio') && sp ? `<button data-act="tab" data-tab="finanzas"><small>Ocio de hoy</small><b class="num" style="color:${sp.left < 0 ? 'var(--rose)' : 'var(--mint)'}">${clp(sp.left)}</b></button>` : ''}
+      </div>
+    </div>
+    ${next ? `<div class="now-card ${why === 'over' ? 'is-over' : ''}">
+      <div class="flex items-center gap-2"><span class="now-dot"></span><span class="now-lbl">${esc(label)}</span><span class="flex-1"></span><span class="text-[12.5px] muted num">${esc(right)}</span></div>
+      <p class="now-title">${esc(next.title)}</p>
+      <p class="text-[13px] muted">${esc([next.sub || '', dur ? dur + ' min' : '', next.xp ? '+' + next.xp + ' XP' : ''].filter(Boolean).join(' · '))}</p>
+      ${why === 'over'
+        ? `<div class="grid grid-cols-3 gap-2"><button class="btn btn-primary btn-48" data-act="dayDo" data-key="${esc(next.key)}"><i class="fa-solid fa-check"></i> Hecho</button><button class="btn btn-ghost btn-48" data-act="dayMove" data-key="${esc(next.key)}">Mover</button><button class="btn btn-ghost btn-48" data-act="daySkip" data-key="${esc(next.key)}">Hoy no</button></div>`
+        : `<div class="grid grid-cols-[1fr_1fr_auto] gap-2"><button class="btn btn-primary btn-48" data-act="nowMode" data-key="${esc(next.key)}"><i class="fa-solid fa-play"></i> Empezar</button><button class="btn btn-mint btn-48" data-act="dayDo" data-key="${esc(next.key)}"><i class="fa-solid fa-check"></i> Hecho</button><button class="btn btn-ghost btn-48 !px-3.5" data-act="dayMove" data-key="${esc(next.key)}" aria-label="Mover a otra hora"><i class="fa-solid fa-clock-rotate-left"></i></button></div>`}
+    </div>` : `<div class="now-card"><p class="now-title">Nada pendiente</p><p class="text-[13px] muted">Disfrútalo sin culpa.</p></div>`}`;
+  ui.nextCand = next || null;
+}
+
+/* ---------- Modo Ahora ---------- */
+let nmTick = null;
+function nowModeEntry(key) { return dayPlan().find(x => x.key === key) || null; }
+function openNowMode(key, minutes) {
+  const e = nowModeEntry(key);
+  if (!e) return;
+  closeModal();
+  const dur = minutes || Math.min(120, e.start != null ? Math.max(5, (e.end || e.start) - e.start) : (e.dur || 15));
+  const running = state.timer.endsAt && state.timer.task && state.timer.task.id === key;
+  if (!running) {
+    ui.dayTimerKey = key;
+    setTimerMode('focus', dur, String(e.title).slice(0, 40));
+    state.timer.task = { kind: 'day', id: key };
+    save(); startTimer();
+  }
+  ui.nowModeKey = key;
+  let el = $('#nowMode');
+  if (!el) { el = document.createElement('div'); el.id = 'nowMode'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'Modo Ahora'); document.body.appendChild(el); }
+  el.hidden = false;
+  document.body.classList.add('nm-open');
+  paintNowMode();
+  clearInterval(nmTick);
+  nmTick = setInterval(paintNowModeTime, 500);
+}
+function nowModeNext(key) {
+  const now = nowMin();
+  return dayPlan().find(x => x.key !== key && x.checkable && !x.done && !x.skipped && !x.optional && (x.start == null || planEnd(x) > now)) || null;
+}
+function paintNowMode() {
+  const el = $('#nowMode');
+  const key = ui.nowModeKey;
+  const e = nowModeEntry(key);
+  if (!el || !e) { closeNowMode(); return; }
+  const nx = nowModeNext(key);
+  const subs = (e.kind === 'task' ? ((state.tasks.find(t => t.id === e.id) || {}).subs || []) : []).filter(s => !s.done);
+  el.innerHTML = `<div class="nm-wrap">
+    <div class="nm-top"><button class="icon-btn" data-act="nowModeClose" aria-label="Salir del modo Ahora"><i class="fa-solid fa-xmark"></i></button><span class="nm-eyebrow">MODO AHORA</span><span class="w-11"></span></div>
+    <div class="flex-1"></div>
+    <p class="text-[14px] ac font-semibold">${esc(toneTxt ? toneTxt('Solo esto. Nada más.', 'Una cosa. Ahora.', 'Solo esto. Nada más.') : 'Solo esto. Nada más.')}</p>
+    <h2 class="nm-title">${esc(e.title)}</h2>
+    <div class="nm-ring"><svg width="240" height="240" viewBox="0 0 240 240" aria-hidden="true"><circle cx="120" cy="120" r="104" fill="none" stroke="rgba(214,204,192,.08)" stroke-width="14"/><circle id="nmArc" cx="120" cy="120" r="104" fill="none" stroke="var(--ac)" stroke-width="14" stroke-linecap="round" stroke-dasharray="653.5" stroke-dashoffset="0" transform="rotate(-90 120 120)"/></svg>
+      <div class="nm-time"><span id="nmClock" class="num">--:--</span><small id="nmOf" class="num"></small></div></div>
+    ${subs.length ? `<p class="text-[13px] muted">Paso siguiente: <span class="text-white">${esc(subs[0].t || subs[0].title || '')}</span></p>` : ''}
+    <div class="flex-1"></div>
+    <div class="w-full space-y-2.5">
+      <button class="btn btn-primary w-full nm-done" data-act="nowModeDone"><i class="fa-solid fa-check"></i> Listo, lo hice</button>
+      <div class="grid grid-cols-2 gap-2.5"><button class="btn btn-ghost btn-48" data-act="nowModePlus">+5 minutos</button><button class="btn btn-ghost btn-48" data-act="nowModeLater">Para después</button></div>
+      ${nx ? `<p class="text-center text-[13px] muted">Lo que sigue: <span class="text-slate-200">${esc(nx.title)}</span></p>` : ''}
+    </div>
+  </div>`;
+  paintNowModeTime();
+}
+function paintNowModeTime() {
+  const c = $('#nmClock'); if (!c) return;
+  const r = timerRemaining(), d = state.timer.duration || 1;
+  c.textContent = `${pad2(Math.floor(r / 60))}:${pad2(r % 60)}`;
+  const of = $('#nmOf'); if (of) of.textContent = r > 0 ? `de ${Math.round(d / 60)} min` : 'se acabó el tiempo: ¿lo terminaste?';
+  const a = $('#nmArc'); if (a) a.setAttribute('stroke-dashoffset', String(653.5 * (1 - r / d)));
+}
+function closeNowMode(fromBack) {
+  clearInterval(nmTick); nmTick = null;
+  const el = $('#nowMode'); if (el) { el.hidden = true; el.innerHTML = ''; }
+  document.body.classList.remove('nm-open');
+  ui.nowModeKey = null;
+}
+window.addEventListener('popstate', () => { if (ui.nowModeKey) closeNowMode(true); });
+function dayStart(key) { openNowMode(key); }
+
+/* ---------- Línea de hoy: marca de «ahora» y huecos libres ---------- */
+function decorateDayLine() {
+  const box = $('#hoyLine .day-line');
+  if (!box || box.dataset.v9) return;
+  box.dataset.v9 = '1';
+  const now = nowMin();
+  const timed = dayPlan().filter(e => e.start != null && !e.optional);
+  const rows = Array.from(box.querySelectorAll('.dl-item'));
+  let placed = false;
+  rows.forEach((r, i) => {
+    const t = (r.querySelector('.dl-time') || {}).textContent || '';
+    const m = dayMin(hhmmToMin(t));
+    if (!placed && isFinite(m) && m > now) {
+      const mk = document.createElement('div');
+      mk.className = 'dl-now';
+      mk.innerHTML = `<span class="num">${minToHHMM(clockMin())}</span>`;
+      r.before(mk); placed = true;
+    }
+    const prevEnd = i > 0 ? (() => { const pe = timed.find(e => minToHHMM(e.start % 1440) === ((rows[i - 1].querySelector('.dl-time') || {}).textContent || '')); return pe ? planEnd(pe) : null; })() : null;
+    if (prevEnd != null && isFinite(m) && m - prevEnd >= 30 && m > now) {
+      const g = document.createElement('div');
+      g.className = 'dl-gap';
+      const gm = m - Math.max(prevEnd, now);
+      if (gm >= 30) { g.textContent = `Libre · ${fmtCountdown(gm)}`; r.before(g); }
+    }
+  });
+}
+
+/* ---------- Agenda: tira de la semana y marca de «ahora» ---------- */
+function decorateAgenda() {
+  const view = $('#view-agenda');
+  if (!view || view.querySelector('.wk-strip')) return;
+  const sel = ui.agendaDay || calKey();
+  const today = calKey();
+  const start = addDays(sel, -((parseKey(sel).getDay() + 6) % 7));
+  const strip = document.createElement('div');
+  strip.className = 'wk-strip';
+  strip.innerHTML = Array.from({ length: 7 }, (_, i) => { const k = addDays(start, i); const d = parseKey(k); const load = typeof dayLoad === 'function' ? dayLoad(k) : 0; return `<button data-act="agendaGo" data-day="${k}" aria-pressed="${k === sel}" class="${k === today ? 'is-today' : ''}"><small>${WD_SHORT[d.getDay()].toUpperCase()}</small><b class="num">${d.getDate()}</b><i style="opacity:${Math.min(1, load / 480).toFixed(2)}"></i></button>`; }).join('');
+  const anchor = view.querySelector('.icon-btn[data-act="agendaShift"]');
+  const row = anchor ? anchor.parentElement : null;
+  if (row) row.after(strip);
+  if (sel === today) {
+    const now = nowMin();
+    const rows = Array.from(view.querySelectorAll('.tl-row'));
+    const nxt = rows.find(r => { const m = dayMin(hhmmToMin((r.querySelector('.tl-time') || {}).textContent || '')); return isFinite(m) && m > now; });
+    if (nxt) { const mk = document.createElement('div'); mk.className = 'tl-now'; mk.innerHTML = `<span class="num">${minToHHMM(clockMin())}</span>`; nxt.before(mk); }
+  }
+}
+
+/* ---------- Dinero: la escalera en columnas ---------- */
+const LAD_GROUPS = [['fijo', 'Fijos', '#91a9c6'], ['comida', 'Comida', '#8fbf9f'], ['deuda', 'Deuda', '#d9776b'], ['emerg', 'Emerg.', '#a99bcb'], ['meta', 'Metas', '#7fb8e0'], ['vault', 'Bóveda', '#c6a5d7'], ['ocio', 'Ocio', '#e9b463']];
+function ladderColsHTML() {
+  if (!secOn('finanzas')) return '';
+  let steps;
+  try { steps = ladderSteps(); } catch (e) { return ''; }
+  const g = {};
+  steps.forEach(s => { const k = s.group === 'ofund' ? 'ocio' : s.group; g[k] = g[k] || { need: 0, filled: 0 }; g[k].need += s.need; g[k].filled += Math.min(s.need, s.filled); });
+  const cols = LAD_GROUPS.filter(([k]) => g[k] && g[k].need > 0);
+  if (!cols.length) return '';
+  const inc = typeof incomeThisMonth === 'function' ? incomeThisMonth() : 0;
+  const f = state.finance;
+  const exp = enabledSources().reduce((a, k) => a + (((f.sources || {})[k] || {}).amount || 0), 0);
+  const totNeed = cols.reduce((a, [k]) => a + g[k].need, 0);
+  const totFill = cols.reduce((a, [k]) => a + g[k].filled, 0);
+  const firstOpen = cols.find(([k]) => g[k].filled < g[k].need);
+  const d = new Date();
+  return `<div class="card card-neon space-y-3" id="ladCols">
+    <div><p class="eyebrow">${MESES[d.getMonth()].toUpperCase()} · LLEGÓ</p><p class="lad-big num">${clp(inc)}${exp ? ` <small>de ${clp(exp)}</small>` : ''}</p></div>
+    <div class="lad-cols" style="grid-template-columns:repeat(${cols.length}, minmax(0, 1fr))">${cols.map(([k, n, c]) => { const p = Math.round(Math.min(1, g[k].filled / g[k].need) * 100); return `<div class="lad-col"><span class="lad-pct num" style="color:${p >= 100 ? 'var(--mint)' : p > 0 ? c : 'var(--muted)'}">${p}%</span><div class="lad-bar ${p === 0 ? 'empty' : ''}"><i style="height:${p}%;background:linear-gradient(180deg, ${c}, ${c}cc)"></i></div><span class="lad-name">${n}</span><span class="lad-amt num">${clpShort(g[k].filled)}<br><span>de ${clpShort(g[k].need)}</span></span></div>`; }).join('')}</div>
+    <p class="text-[12.5px] muted">${totFill >= totNeed ? 'La escalera está completa este mes ✓ Lo que llegue ahora va a la deuda o al ahorro.' : `Faltan <b class="text-white num">${clp(totNeed - totFill)}</b> para completar la escalera. Lo próximo que llegue va primero a <b class="text-white">${firstOpen ? firstOpen[1].toLowerCase() : ''}</b>.`}</p>
+  </div>`;
+}
+
+/* ---------- Después de cada dibujo ---------- */
+function v9After() {
+  try { applySky(); bindHeaderShrink(); moreSync(); } catch (e) { /* nada */ }
+  try {
+    if (ui.tab === 'hoy') decorateDayLine();
+    if (ui.tab === 'agenda') decorateAgenda();
+    if (ui.tab === 'finanzas') {
+      const sc = $('#spendCard') || $('#v84Fin');
+      const old = $('#v84Fin'); if (old) old.remove();
+      let h = $('#v9Lad');
+      const html = ladderColsHTML();
+      if (!h && html) { h = document.createElement('div'); h.id = 'v9Lad'; const anchor = $('#spendCard'); if (anchor) anchor.after(h); else { const v = $('#view-finanzas'); if (v) v.prepend(h); } }
+      if (h) h.innerHTML = html;
+    }
+  } catch (e) { if (typeof errPush === 'function') errPush('v9: ' + e.message); }
+}
+setInterval(() => { try { applySky(); } catch (e) { /* nada */ } }, 5 * 60000);
+
+Object.assign(V5_ACTIONS, {
+  moreOpen: () => openMore(),
+  moreGo: el => { closeModal(); setTimeout(() => setTab(el.dataset.tab), 30); },
+  nowMode: el => openNowMode(el.dataset.key),
+  nowModeClose: () => closeNowMode(),
+  nowModeDone: () => { const k = ui.nowModeKey; closeNowMode(); try { resetTimer(); } catch (e) { /* nada */ } if (k) { dayDo(k); celebrate('small'); } },
+  nowModePlus: () => { const t = state.timer; if (t.endsAt) t.endsAt += 300000; else t.remaining += 300; t.duration += 300; save(); paintNowModeTime(); },
+  nowModeLater: () => { const k = ui.nowModeKey; closeNowMode(); try { pauseTimer(); } catch (e) { /* nada */ } if (k) setTimeout(() => openDayMove(k), 60); },
+  agendaGo: el => { ui.agendaDay = el.dataset.day; renderAll(); }
+});
+/* =========================================================
+   v9 · PRISMA 2
+   Conversación con contexto (corregir, borrar, cambiar),
+   varias órdenes en una frase, aprende tus palabras,
+   responde con tus datos, marca y mueve tareas por nombre,
+   «estoy bloqueado» → Modo Ahora, manos libres, consejos
+   con tus patrones y, si quieres, una IA como motor
+   (Claude, ChatGPT o Gemini) con tu propia clave.
+   ========================================================= */
+
+const prCtx = { last: null, hist: [] };
+
+/* ---------- Chat en burbujas ---------- */
+function prChat() { return $('#prChat'); }
+function prScroll() { const c = prChat(); if (c) c.scrollTop = c.scrollHeight; }
+function prUser(q) {
+  const c = prChat(); if (!c) return;
+  const d = document.createElement('div'); d.className = 'pr-msg pr-me'; d.textContent = q; c.appendChild(d); prScroll();
+}
+function prBubble(text, extra) { return `<p class="leading-snug">${text}</p>${extra || ''}`; }
+function prConfirmBox(text, okLabel) {
+  return prBubble(text, `<div class="grid grid-cols-2 gap-2 mt-2.5"><button class="btn btn-ghost btn-sm" data-act="prismaNo">No</button><button class="btn btn-primary btn-sm" data-act="prismaYes"><i class="fa-solid fa-check"></i> ${okLabel || 'Sí, hazlo'}</button></div>`);
+}
+function prOut(html, say) {
+  const c = prChat();
+  if (c) {
+    c.querySelectorAll('[data-act="prismaYes"],[data-act="prismaNo"],[data-act="prCat"],[data-act="prUndoLast"]').forEach(b => { b.disabled = true; });
+    const d = document.createElement('div'); d.className = 'pr-msg pr-bot'; d.innerHTML = html; c.appendChild(d);
+    c.querySelectorAll('.pr-thinking').forEach(x => x.remove());
+    prScroll();
+  }
+  const you = $('#prYou'); if (you) you.hidden = true;
+  if (say) { prCtx.hist.push({ role: 'assistant', text: String(say).slice(0, 400) }); prCtx.hist = prCtx.hist.slice(-8); prismaSpeak(say, false, prAfterSpeak); }
+}
+function prThinking() { const c = prChat(); if (!c) return; const d = document.createElement('div'); d.className = 'pr-msg pr-bot pr-thinking'; d.innerHTML = '<span class="pr-dots"><i></i><i></i><i></i></span>'; c.appendChild(d); prScroll(); }
+
+/* ---------- Voz con aviso al terminar (manos libres) ---------- */
+function prismaSpeak(text, force, onend) {
+  try {
+    const c = pr().cfg;
+    if ((!c.speak && !force) || !('speechSynthesis' in window)) { if (onend) setTimeout(onend, 300); return; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(prSay(text));
+    const vs = prVoices.length ? prVoices : prLoadVoices();
+    const v = vs.find(x => x.name === c.voice) || vs.find(x => /es[-_](419|US|MX|CL)/i.test(x.lang)) || vs[0];
+    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'es-419';
+    u.rate = Math.min(1.5, Math.max(0.6, Number(c.rate) || 1));
+    if (onend) u.onend = () => onend();
+    speechSynthesis.speak(u);
+  } catch (e) { if (onend) setTimeout(onend, 300); }
+}
+function prAfterSpeak() {
+  const c = pr().cfg;
+  if (!c.handsFree || !prChat() || prListening || ui.prStopHands) return;
+  setTimeout(() => { if (prChat() && !prListening) prismaListen(); }, 350);
+}
+
+/* ---------- Aprende tus palabras ---------- */
+function prLearnMap() { const p = pr(); p.learn = p.learn || {}; return p.learn; }
+function prKeyWords(t) { return prNorm(t).split(' ').filter(w => w.length >= 4 && !/^(gaste|gasto|pague|compre|anota|para|con|tarjeta|pesos|lucas|mil|una|unos|unas|este|esta|hoy|ayer)$/.test(w) && !/^\d/.test(w)); }
+function prCategory(t) {
+  const L = prLearnMap();
+  const hit = prKeyWords(t).find(w => L[w]);
+  if (hit) return L[hit];
+  if (PR_OCIO_WORDS.test(t) && !/(super|lider|santa isabel|jumbo|unimarc|tottus)/.test(t)) return 'gustos';
+  const c = PR_CATS.find(([, re]) => re.test(t));
+  return c ? c[0] : 'otro';
+}
+function prLearn(note, cat) {
+  const L = prLearnMap();
+  prKeyWords(note).slice(0, 3).forEach(w => { L[w] = cat; });
+  const keys = Object.keys(L); if (keys.length > 300) delete L[keys[0]];
+  save();
+}
+
+/* ---------- Gastos: confirmación con categoría que se puede cambiar ---------- */
+let prSpendList = null;
+function prAskSpend(list) {
+  prSpendList = list.map(P => Object.assign({}, P));
+  const cats = EXPENSE_CATS;
+  const one = prSpendList.length === 1;
+  const rows = prSpendList.map((P, i) => {
+    const c = cats.find(x => x.key === P.cat) || cats.find(x => x.key === 'otro');
+    return `<div class="pr-spend"><div class="flex items-baseline justify-between gap-2"><span class="text-white font-semibold">${esc(P.note || c.name)}</span><b class="num">${clp(P.amount)}</b></div>
+      <div class="flex flex-wrap gap-1 mt-1.5">${cats.filter(x => ['comida', 'super', 'gustos', 'transporte', 'cuentas', 'hogar', 'salud', 'otro'].includes(x.key) || x.key === P.cat).map(x => `<button class="chip-btn !text-[11.5px] !py-1" data-act="prCat" data-i="${i}" data-k="${x.key}" aria-pressed="${x.key === P.cat}">${esc(x.name)}</button>`).join('')}</div></div>`;
+  }).join('');
+  const total = prSpendList.reduce((a, P) => a + P.amount, 0);
+  prPending = () => { prSpendList.forEach(P => prDoSpendQuiet(P)); const n = prSpendList.length; renderAll(); prAfterAction({ type: 'gastos', ids: state.finance.history.slice(0, n).map(h => h.id) }); const sp = typeof todaySpend === 'function' ? todaySpend() : null; const t = `${one ? 'Gasto anotado' : `${n} gastos anotados`} ✓${sp && prSpendList.some(P => P.cat === 'gustos') ? ` Te quedan ${clp(Math.max(0, sp.left))} de ocio hoy.` : ''}`; prOut(prBubble(esc(t), `<button class="link-btn mt-1" data-act="prUndoLast"><i class="fa-solid fa-rotate-left"></i> Deshacer</button>`), t); };
+  const q = one ? `¿Anoto ${clp(total)}?` : `¿Anoto estos ${prSpendList.length} gastos? Total ${clp(total)}.`;
+  prOut(prBubble(esc(q), rows + `<p class="text-[11.5px] muted mt-1.5">Si la categoría está mal, tócala y la aprendo.</p><div class="grid grid-cols-2 gap-2 mt-2.5"><button class="btn btn-ghost btn-sm" data-act="prismaNo">No</button><button class="btn btn-primary btn-sm" data-act="prismaYes"><i class="fa-solid fa-check"></i> Sí, anotar</button></div>`), q);
+}
+function prDoSpendQuiet(P) {
+  const c = EXPENSE_CATS.find(x => x.key === P.cat) || EXPENSE_CATS.find(x => x.key === 'otro');
+  const debt = P.card ? (state.finance.debts.find(d => /tarjeta|cr[eé]dito/i.test(d.name)) || state.finance.debts[0]) : null;
+  pushHistory(Object.assign({ kind: 'gasto', cat: c.key, env: c.key === 'gustos' ? 'esenciales' : c.env, amount: P.amount, note: String(P.note || c.name).slice(0, 60), src: 'prisma' }, c.key === 'gustos' ? { sub: P.sub || prOcioSub(prNorm(P.note || '')) } : {}, P.card ? { card: true, debtId: debt ? debt.id : null } : {}));
+  if (debt) debt.initial += P.amount;
+  if (c.key === 'gustos') registerActivity(); else reward(5, 2);
+  save();
+}
+
+/* ---------- Varias órdenes en una frase ---------- */
+function prSplitSpends(raw) {
+  const t = prNumbers(prNorm(raw));
+  if (!/\b(gaste|gasto|pague|compre|me gaste)\b/.test(t)) return null;
+  const segs = t.split(/\s+y\s+|\s*,\s*|\s+mas\s+/).filter(Boolean);
+  if (segs.length < 2) return null;
+  const verb = (t.match(/\b(gaste|gasto|pague|compre|me gaste)\b/) || ['gaste'])[0];
+  const out = [];
+  segs.forEach((s, i) => {
+    if (!/\d/.test(s)) return;
+    const P = prismaParse(i === 0 || /\b(gaste|gasto|pague|compre)\b/.test(s) ? s : verb + ' ' + s);
+    if (P.kind === 'spend') out.push(P);
+  });
+  return out.length >= 2 ? out : null;
+}
+
+/* ---------- Respuestas con tus datos ---------- */
+function prPeriod(t) {
+  const now = new Date(), k = calKey();
+  if (/\bhoy\b/.test(t)) return { from: k, to: k, label: 'hoy' };
+  if (/\bayer\b/.test(t)) { const y = addDays(k, -1); return { from: y, to: y, label: 'ayer' }; }
+  if (/semana pasada/.test(t)) { const ws = weekStartKey(k); return { from: addDays(ws, -7), to: addDays(ws, -1), label: 'la semana pasada' }; }
+  if (/esta semana|la semana/.test(t)) return { from: weekStartKey(k), to: k, label: 'esta semana' };
+  if (/mes pasado/.test(t)) { const d = new Date(now.getFullYear(), now.getMonth() - 1, 1); const e = new Date(now.getFullYear(), now.getMonth(), 0); return { from: dayKey(d.getTime()), to: dayKey(e.getTime()), label: 'el mes pasado' }; }
+  return { from: dayKey(new Date(now.getFullYear(), now.getMonth(), 1).getTime()), to: k, label: 'este mes' };
+}
+function prMoves() {
+  const seen = new Set();
+  return (state.archive || []).flatMap(a => a.moves || []).concat(state.finance.history).filter(h => { const key = h.ts + '|' + h.kind + '|' + h.amount; if (seen.has(key)) return false; seen.add(key); return true; });
+}
+function prDataAnswer(t) {
+  const has = re => re.test(t);
+  if (has(/cuanto (he |llevo )?(gaste|gastado|gasto)|cuanto se me fue|gasto total|total de gastos/)) {
+    const P = prPeriod(t);
+    let list = prMoves().filter(h => h.kind === 'gasto' && dayKey(h.ts) >= P.from && dayKey(h.ts) <= P.to);
+    const cat = EXPENSE_CATS.find(c => t.includes(prNorm(c.name)) || t.includes(c.key));
+    const L = prLearnMap();
+    const m = t.match(/\ben\s+([a-z]{3,}(?:\s[a-z]{3,})?)/);
+    let lab = '';
+    if (cat) { list = list.filter(h => h.cat === cat.key); lab = ' en ' + cat.name.toLowerCase(); }
+    else if (m && !/^(este|esta|el|la|total)\b/.test(m[1])) { const w = m[1]; const lc = L[w.split(' ')[0]]; list = list.filter(h => prNorm(h.note || '').includes(w) || (lc && h.cat === lc)); lab = ' en ' + w; }
+    const sum = list.reduce((a, h) => a + h.amount, 0);
+    return list.length ? `${P.label.charAt(0).toUpperCase() + P.label.slice(1)} gastaste ${clp(sum)}${lab}, en ${plural(list.length, 'gasto', 'gastos')}.` : `No encuentro gastos${lab} ${P.label}.`;
+  }
+  if (has(/(en que|donde|en donde) (gasto|gaste|se me va) (mas|la plata|el dinero)|mayor(es)? gasto/)) {
+    const P = prPeriod(t);
+    const by = {}; prMoves().filter(h => h.kind === 'gasto' && dayKey(h.ts) >= P.from && dayKey(h.ts) <= P.to).forEach(h => { by[h.cat] = (by[h.cat] || 0) + h.amount; });
+    const tot = Object.values(by).reduce((a, b) => a + b, 0);
+    const top = Object.entries(by).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    if (!top.length) return `No tienes gastos anotados ${P.label}.`;
+    return `${P.label.charAt(0).toUpperCase() + P.label.slice(1)} donde más gastas: ${top.map(([k, v]) => `${((EXPENSE_CATS.find(c => c.key === k) || {}).name || k).toLowerCase()} ${clp(v)} (${Math.round(v / tot * 100)}%)`).join(', ')}.`;
+  }
+  if (has(/(voy mejor|voy peor|como voy|comparad|que el mes pasado|vs el mes pasado)/)) {
+    const now = new Date(); const day = now.getDate();
+    const a0 = dayKey(new Date(now.getFullYear(), now.getMonth(), 1).getTime()), a1 = calKey();
+    const b0 = dayKey(new Date(now.getFullYear(), now.getMonth() - 1, 1).getTime()), b1 = dayKey(new Date(now.getFullYear(), now.getMonth() - 1, Math.min(day, 28)).getTime());
+    const sp = (x, y) => prMoves().filter(h => h.kind === 'gasto' && dayKey(h.ts) >= x && dayKey(h.ts) <= y).reduce((s, h) => s + h.amount, 0);
+    const wo = (x, y) => Object.keys(state.training.log || {}).filter(k => k >= x && k <= y && state.training.log[k].fin).length + (state.body.sports || []).filter(s => s.day >= x && s.day <= y).length;
+    const A = sp(a0, a1), B = sp(b0, b1), WA = wo(a0, a1), WB = wo(b0, b1);
+    const dif = B ? Math.round((A - B) / B * 100) : null;
+    return `A esta altura del mes llevas ${clp(A)} en gastos${dif != null ? `, ${Math.abs(dif)}% ${dif > 0 ? 'más' : 'menos'} que el mes pasado (${clp(B)})` : ''}. Entrenaste ${WA} ${WA === 1 ? 'vez' : 'veces'}${WB || WA ? ` contra ${WB} el mes pasado` : ''}. ${dif != null && dif <= 0 && WA >= WB ? 'Vas mejor.' : dif != null && dif > 15 ? 'Ojo con el gasto.' : ''}`.trim();
+  }
+  if (has(/(como|cuanto|que tal) (he )?dormi|mi sueno|horas de sueno/)) {
+    const L = []; for (let i = 0; i < 7; i++) { const s = (state.body.sleepLog || {})[addDays(calKey(), -i)]; if (s) L.push(s.h); }
+    if (!L.length) return 'No tienes noches anotadas esta semana. Anótalas en Cuerpo → Salud y te lo digo.';
+    const avg = L.reduce((a, b) => a + b, 0) / L.length; const low = L.filter(h => h < 7).length;
+    return `Esta semana dormiste ${String(Math.round(avg * 10) / 10).replace('.', ',')} horas en promedio, en ${plural(L.length, 'noche anotada', 'noches anotadas')}. ${low ? `${plural(low, 'noche', 'noches')} con menos de 7 horas.` : 'Todas con 7 horas o más. Bien.'}`;
+  }
+  if (has(/cuantas veces (he )?(entrene|fui al gym|fui al gimnasio)|cuanto (he )?entrenado|mis entrenos/)) {
+    const P = prPeriod(t);
+    const n = Object.keys(state.training.log || {}).filter(k => k >= P.from && k <= P.to && state.training.log[k].fin).length;
+    const s = (state.body.sports || []).filter(x => x.day >= P.from && x.day <= P.to).length;
+    return `${P.label.charAt(0).toUpperCase() + P.label.slice(1)}: ${plural(n, 'entreno', 'entrenos')}${s ? ` y ${plural(s, 'día de deporte', 'días de deporte')}` : ''}.`;
+  }
+  if (has(/(como (ha estado|esta|va|anda) mi animo|mi animo|como me he sentido)/)) {
+    const avgOf = (a, b) => { const v = []; for (let i = a; i < b; i++) { const m = dayMood(addDays(dayKey(), -i)); if (m !== null) v.push(m); } return v.length ? v.reduce((x, y) => x + y, 0) / v.length : null; };
+    const A = avgOf(0, 7), B = avgOf(7, 14);
+    const emo = {}; state.mente.checkins.filter(c => daysBetween(c.day, dayKey()) < 7).forEach(c => { emo[c.emo] = (emo[c.emo] || 0) + 1; });
+    const top = Object.entries(emo).sort((a, b) => b[1] - a[1])[0];
+    if (A === null) return 'No tengo registros de ánimo esta semana. Cuéntame cómo te sientes y lo anoto.';
+    return `Tu ánimo esta semana: ${String(Math.round(A * 10) / 10).replace('.', ',')} de 5${B !== null ? `, ${A > B + 0.2 ? 'mejor' : A < B - 0.2 ? 'más bajo' : 'parecido'} que la semana anterior` : ''}.${top && EMO[top[0]] ? ` Lo que más sentiste: ${EMO[top[0]].n.toLowerCase()}.` : ''}`;
+  }
+  let m;
+  if ((m = t.match(/(?:cuando es|cuando cumple|cumpleanos de|aniversario de)\s+(?:el cumpleanos de\s+)?(?:mi\s+)?([a-z ]{2,30})/))) {
+    const who = m[1].replace(/\b(el|la|mi)\b/g, '').trim();
+    const d = (typeof datesList === 'function' ? datesList() : []).find(x => prNorm(x.name).includes(who) || who.includes(prNorm(x.name)));
+    if (d) { const k = dateNext(d); const n = daysBetween(calKey(), k); return `${dateTitle({ d })}: ${parseKey(k).getDate()} de ${MESES[parseKey(k).getMonth()]}, ${dateWhen(n)}.`; }
+  }
+  if (has(/(cuanta|cuanto|como voy con el|como voy con la) (agua|proteina)/) && typeof protGoal === 'function') return `Hoy llevas ${(state.body.water || {})[calKey()] || 0} de ${waterGoal()} vasos de agua y ${protDay().g} de ${protGoal()} gramos de proteína.`;
+  if (has(/(que me hace bien|que me ayuda|mis patrones|que he aprendido de mi)/)) { const tp = prPatternTip(true); return tp || 'Todavía no hay suficientes días para ver patrones firmes. Sigue registrando tu ánimo.'; }
+  return null;
+}
+function prPatternTip(any) {
+  try {
+    const c = correlations();
+    const r = c.list.filter(x => x.ready && (any || x.conf !== 'débil') && Math.abs(x.diff) >= 0.4).sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff))[0];
+    if (!r) return null;
+    return `Un patrón tuyo: ${r.goodText} tu ánimo ${r.diff > 0 ? 'sube' : 'baja'} ${String(Math.abs(r.diff).toFixed(1)).replace('.', ',')} puntos (pista ${r.conf}).`;
+  } catch (e) { return null; }
+}
+
+/* ---------- Encontrar algo de tu día por su nombre ---------- */
+function prFindItem(words, opts = {}) {
+  const stop = /^(los|las|del|una|uno|eso|esto|esa|ese|para|con|que|lo|la|el|de|mis|tus)$/;
+  const kw = x => prNorm(x).split(' ').filter(w => w.length >= 3 && !stop.test(w) && !/^\d/.test(w)).map(w => w.slice(0, 5));
+  const tok = kw(words);
+  if (!tok.length) return null;
+  const pool = opts.tasks ? state.tasks.filter(x => !x.done && x.date >= addDays(calKey(), -2)).map(x => ({ title: x.title, task: x })) : dayPlan().filter(e => e.checkable && !e.skipped).map(e => ({ title: e.title, e }));
+  let best = null, bs = 0;
+  pool.forEach(it => { const tw = kw(it.title); const s = tok.filter(x => tw.includes(x)).length; if (s > bs) { bs = s; best = it; } });
+  return bs >= 1 ? best : null;
+}
+
+/* ---------- Lo que hizo la última acción (para corregir) ---------- */
+function prAfterAction(a) { prCtx.last = Object.assign({ ts: Date.now() }, a); }
+function prWrapPending() {
+  const f = prPending;
+  if (!f) return;
+  const h0 = (state.finance.history[0] || {}).id, t0 = state.tasks.length, s0 = state.shop.extra.length;
+  prPending = () => {
+    f();
+    const h1 = (state.finance.history[0] || {}).id;
+    if (h1 && h1 !== h0) prAfterAction({ type: 'gastos', ids: [h1] });
+    else if (state.tasks.length > t0) prAfterAction({ type: 'tarea', id: state.tasks[state.tasks.length - 1].id });
+    else if (state.shop.extra.length > s0) prAfterAction({ type: 'compra', id: state.shop.extra[state.shop.extra.length - 1].id });
+  };
+}
+function prFollowUp(t, raw) {
+  const L = prCtx.last;
+  if (!L || Date.now() - L.ts > 10 * 60000) return false;
+  const ans = (x) => { prOut(prBubble(esc(x)), x); return true; };
+  if (/^(borra(lo)?|elimina(lo)?|deshaz(lo)?|deshacer|cancela(lo)?|quita(lo)?)\b/.test(t)) {
+    if (L.type === 'gastos') { L.ids.forEach(id => undoHistory(id)); prCtx.last = null; return ans('Listo, lo borré.'); }
+    if (L.type === 'tarea') { state.tasks = state.tasks.filter(x => x.id !== L.id); save(); renderAll(); prCtx.last = null; return ans('Listo, borré esa tarea.'); }
+    if (L.type === 'compra') { state.shop.extra = state.shop.extra.filter(x => x.id !== L.id); save(); renderAll(); prCtx.last = null; return ans('Listo, lo saqué de la lista.'); }
+  }
+  const tn = prNumbers(t);
+  if (L.type === 'gastos' && L.ids.length === 1 && /^(no\s+)?(eran|era|fueron|fue|en realidad|corrige|cambialo a|cambia a|ponle|son)\b/.test(tn) && /\d/.test(tn)) {
+    const h = state.finance.history.find(x => x.id === L.ids[0]);
+    const v = prAmount(tn);
+    if (h && v > 0) { const diff = v - h.amount; if (h.card && h.debtId) { const d = state.finance.debts.find(x => x.id === h.debtId); if (d) d.initial = Math.max(d.paid, d.initial + diff); } h.amount = v; save(); renderAll(); return ans(`Corregido: ${clp(v)}.`); }
+  }
+  if (L.type === 'gastos' && L.ids.length === 1 && /^(no\s+)?(era|eso era|es|fue)\s+(de\s+|en\s+)?/.test(t)) {
+    const c = EXPENSE_CATS.find(x => t.includes(prNorm(x.name)) || t.includes(x.key));
+    const h = state.finance.history.find(x => x.id === L.ids[0]);
+    if (c && h) { h.cat = c.key; h.env = c.env; prLearn(h.note || '', c.key); save(); renderAll(); return ans(`Cambiado a ${c.name.toLowerCase()}. La próxima vez ya lo sé.`); }
+  }
+  if (L.type === 'tarea' && /^(cambia(lo)?|pasa(lo)?|mueve(lo)?|mejor|no[, ]+mejor|ponlo|que sea)\b/.test(t)) {
+    const w = prWhen(tn);
+    let rest = tn.replace(/^(cambia(lo)?|pasa(lo)?|mueve(lo)?|mejor|no[, ]+mejor|ponlo|que sea)\b/, ' ');
+    w.rx.forEach(r => { rest = rest.replace(r, ' '); });
+    rest = rest.replace(/\b(a|para|las?|el|en|de|la tarde|la noche|la manana|y media|y cuarto|hrs?)\b/g, ' ').replace(/\d+/g, ' ');
+    if (rest.split(/\s+/).some(x => x.length >= 3 && !/^(los|las|del|una|uno|eso|esto|esa|ese|para|mejor|mas|tarde|noche|hoy|lo)$/.test(x))) return false;
+    const tk = state.tasks.find(x => x.id === L.id);
+    if (tk && (w.date || w.time != null)) { if (w.date) tk.date = w.date; if (w.time != null) { tk.time = minToHHMM(w.time); tk.prio = 'fija'; } save(); renderAll(); return ans(`Cambiado: ${tk.title}, ${prTaskWhen(tk.date, tk.time ? hhmmToMin(tk.time) : null)}.`); }
+  }
+  return false;
+}
+
+/* ---------- El cerebro: primero lo propio, después la IA ---------- */
+function prismaHandle(raw) {
+  const q = String(raw || '').trim();
+  if (!q) return;
+  prUser(q);
+  prCtx.hist.push({ role: 'user', text: q.slice(0, 400) }); prCtx.hist = prCtx.hist.slice(-8);
+  const t = prNorm(q);
+  if (prPending && /^(si|sí|dale|ok|okay|hazlo|confirmo|claro|correcto|de una|perfecto|ya)\b/.test(t)) { const f = prPending; prPending = null; f(); return; }
+  if (prPending && /^(no|cancela|deja|mejor no|nada)\b/.test(t)) { prPending = null; prOut(prBubble('Ok, no hago nada.'), 'Ok.'); return; }
+  prPending = null;
+  if (/^(gracias|eso es todo|listo eso|nada mas|chao|adios|hasta luego)\b/.test(t)) { ui.prStopHands = true; setTimeout(() => { ui.prStopHands = false; }, 4000); prOut(prBubble('Cuando quieras. 🙂'), 'Cuando quieras.'); return; }
+  if (prFollowUp(t, q)) return;
+  const multi = prSplitSpends(q);
+  if (multi) { if (!secOn('finanzas')) { prOut(prBubble('Tienes Dinero apagado en Ajustes.'), 'Tienes Dinero apagado.'); return; } prAskSpend(multi); return; }
+  if (/(estoy bloquead|no puedo empezar|no se por donde empezar|ayudame a empezar|me cuesta empezar|no arranco|no tengo ganas de nada|estoy trabado)/.test(t)) {
+    const pend = dayPlan().filter(e => e.checkable && !e.done && !e.skipped && !e.optional);
+    if (!pend.length) { prOut(prBubble('No tienes nada pendiente ahora. Descansa sin culpa.'), 'No tienes nada pendiente.'); return; }
+    const pick = pend.slice().sort((a, b) => ((a.start != null ? (a.end || a.start) - a.start : a.dur || 15)) - ((b.start != null ? (b.end || b.start) - b.start : b.dur || 15)))[0];
+    prPending = () => { closeModal(); setTimeout(() => openNowMode(pick.key, 5), 60); };
+    const msg = `Hagamos algo pequeño. ¿Empezamos con «${pick.title}» solo 5 minutos? Si después quieres parar, paras.`;
+    prOut(prConfirmBox(esc(msg), 'Empezar 5 min'), msg); return;
+  }
+  const tn = prNumbers(t);
+  let m;
+  if ((m = tn.match(/^(?:ya\s+)(.+)$/)) || (m = tn.match(/^(?:listo con|termine|ya termine|hice|ya hice|marca(?:r)?(?: como hecho)?)\s+(?:lo de\s+|el\s+|la\s+)?(.+)$/))) {
+    if (!/\d{3,}/.test(tn)) {
+      const it = prFindItem(m[1]);
+      if (it) { const e = it.e; prPending = () => { dayDo(e.key); prOut(prBubble(`Hecho ✓ ${esc(e.title)}`), 'Hecho.'); }; prOut(prConfirmBox(esc(`¿Marco como hecho «${e.title}»?`), 'Sí, hecho'), `¿Marco como hecho ${e.title}?`); return; }
+    }
+  }
+  if ((m = tn.match(/^(?:pasa|mueve|cambia|corre|posterga|deja)\s+(?:lo de\s+|la\s+|el\s+|los\s+|las\s+)?(.+?)\s+(?:a|para)\s+(.+)$/))) {
+    const it = prFindItem(m[1], { tasks: true });
+    const w = prWhen(m[2].startsWith('las') || m[2].startsWith('la ') ? 'a ' + m[2] : m[2]);
+    if (it && (w.date || w.time != null)) {
+      const tk = it.task;
+      const nd = w.date || tk.date, nt = w.time != null ? minToHHMM(w.time) : tk.time;
+      prPending = () => { tk.date = nd; tk.time = nt; tk.moves = (tk.moves || 0) + 1; if (nt) tk.prio = tk.prio === 'flexible' ? 'normal' : tk.prio; save(); renderAll(); prAfterAction({ type: 'tarea', id: tk.id }); prOut(prBubble(`Movido ✓ ${esc(tk.title)}, ${esc(prTaskWhen(nd, nt ? hhmmToMin(nt) : null))}.`), 'Movido.'); };
+      const msg = `¿Muevo «${tk.title}» para ${prTaskWhen(nd, nt ? hhmmToMin(nt) : null)}?`;
+      prOut(prConfirmBox(esc(msg), 'Mover'), msg); return;
+    }
+  }
+  const data = prDataAnswer(tn);
+  if (data) { prOut(prBubble(esc(data)), data); return; }
+  const P = prismaParse(q);
+  if (P.kind === 'spend' && secOn('finanzas')) { prAskSpend([P]); return; }
+  prismaHandleBase(q);
+  prWrapPending();
+}
+
+/* ---------- Lo que Prisma no entiende: la IA, si está conectada ---------- */
+function prismaUnknown(q) {
+  if (aiReady()) { aiAsk(q); return; }
+  prPending = () => prDoInbox(q);
+  const hint = aiCfg().prov ? ' (La IA está conectada, pero no hay internet.)' : '';
+  prOut(prConfirmBox('No te entendí bien. ¿Lo guardo en tu bandeja para verlo después?' + hint, 'Guardar'), 'No te entendí bien. ¿Lo guardo en tu bandeja?');
+}
+
+/* ================= Motor de IA opcional ================= */
+const AI_KEY = 'control_ai';
+const AI_PROV = {
+  claude: { name: 'Claude', model: 'claude-haiku-5-5', site: 'https://console.anthropic.com', note: 'De pago por uso. Con Haiku, el uso normal de Prisma cuesta menos de 1 dólar al mes.',
+    steps: ['Entra a console.anthropic.com e inicia sesión (o crea tu cuenta).', 'Ve a Facturación (Billing), carga saldo con tu tarjeta y pon un tope mensual.', 'Ve a Claves de API (API keys) y toca Crear clave (Create Key).', 'Copia la clave (empieza con «sk-ant-») y pégala aquí abajo.'] },
+  openai: { name: 'ChatGPT', model: 'gpt-5.4-mini', site: 'https://platform.openai.com/api-keys', note: 'De pago por uso. Es aparte del plan de ChatGPT. El uso normal de Prisma cuesta unos pocos dólares al mes.',
+    steps: ['Entra a platform.openai.com e inicia sesión.', 'Ve a Facturación (Billing), carga saldo y pon un límite de gasto.', 'Ve a Claves de API (API keys) y toca Crear clave secreta (Create new secret key).', 'Copia la clave (empieza con «sk-») y pégala aquí abajo.'] },
+  gemini: { name: 'Gemini', model: 'gemini-flash-latest', site: 'https://aistudio.google.com/app/apikey', note: 'Gratis con un límite diario. En el plan gratis, Google puede usar lo que le dices para mejorar sus productos.',
+    steps: ['Entra a aistudio.google.com con tu cuenta de Google.', 'Toca Obtener clave de API (Get API key).', 'Toca Crear clave de API (Create API key).', 'Copia la clave y pégala aquí abajo.'] }
+};
+function aiCfg() { try { return JSON.parse(localStorage.getItem(AI_KEY) || '{}') || {}; } catch (e) { return {}; } }
+function aiSave(c) { try { if (c && c.prov) localStorage.setItem(AI_KEY, JSON.stringify(c)); else localStorage.removeItem(AI_KEY); } catch (e) { /* nada */ } }
+function aiReady() { const c = aiCfg(); return !!(c.prov && c.key && AI_PROV[c.prov] && navigator.onLine); }
+
+function aiContext() {
+  const k = calKey(), now = nowMin();
+  const plan = dayPlan(k).filter(e => !e.optional).slice(0, 30).map(e => ({ key: e.key, hora: e.start != null ? minToHHMM(e.start % 1440) : null, titulo: e.title, hecho: !!e.done, saltado: !!e.skipped, tipo: e.kind }));
+  const mk = monthKey(Date.now());
+  const byCat = {}; state.finance.history.filter(h => h.kind === 'gasto' && monthKey(h.ts) === mk).forEach(h => { byCat[h.cat] = (byCat[h.cat] || 0) + h.amount; });
+  const sp = secOn('finanzas.ocio') && typeof todaySpend === 'function' ? todaySpend() : null;
+  const tasks = state.tasks.filter(t => !t.done && t.date > k && t.date <= addDays(k, 7)).slice(0, 20).map(t => ({ fecha: t.date, hora: t.time || null, titulo: t.title }));
+  const ctx = {
+    nombre: (state.profile.name || '').split(' ')[0], hoy: k, dia_semana: WEEKDAYS[parseKey(k).getDay()], hora_actual: minToHHMM(clockMin()), dormir: state.schedule.sleep, despertar: state.schedule.wake,
+    plan_de_hoy: plan,
+    ocio_hoy: sp ? { disponible: sp.left, gastado: sp.spentToday } : null,
+    gastos_del_mes_por_categoria: byCat,
+    ingresos_del_mes: typeof incomeThisMonth === 'function' ? incomeThisMonth() : null,
+    deudas: (state.finance.debts || []).filter(d => debtRemaining(d) > 0).map(d => ({ nombre: d.name, falta: debtRemaining(d) })),
+    proximas_tareas: tasks,
+    fechas_importantes: typeof datesUpcoming === 'function' ? datesUpcoming(30).map(x => ({ que: dateTitle(x), en_dias: x.n })) : [],
+    agua_hoy: (state.body.water || {})[k] || 0, proteina_hoy: typeof protDay === 'function' ? protDay().g : null,
+    sueno_prom_7d: typeof sleepAvg === 'function' ? sleepAvg() : null,
+    categorias_validas: EXPENSE_CATS.map(c => c.key)
+  };
+  return JSON.stringify(ctx);
+}
+function aiSystem() {
+  return `Eres Prisma, el asistente de la app personal "Control" de ${(state.profile.name || 'la persona').split(' ')[0]}. Ayudas a alguien con TDAH a organizar su día, su dinero, su casa y su cuerpo.
+Reglas:
+- Responde en español latino neutro, cálido y MUY breve (máximo 3 frases cortas). Sin regionalismos.
+- Usa solo los datos del CONTEXTO. Nunca inventes montos, fechas ni tareas. Si falta un dato, dilo.
+- Montos en pesos chilenos, sin decimales.
+- Puedes proponer acciones SOLO de esta lista; la app le pedirá confirmación a la persona antes de hacerlas:
+  {"tipo":"gasto","monto":número,"categoria":una de categorias_validas,"nota":texto corto}
+  {"tipo":"tarea","titulo":texto,"fecha":"AAAA-MM-DD","hora":"HH:MM" o ""}
+  {"tipo":"compra","item":texto}
+  {"tipo":"nota","texto":texto}
+  {"tipo":"agua","vasos":número}
+  {"tipo":"proteina","gramos":número,"nombre":texto}
+  {"tipo":"hecho","key":una key de plan_de_hoy}
+  {"tipo":"mover","titulo":texto exacto de una tarea,"fecha":"AAAA-MM-DD","hora":"HH:MM" o ""}
+- No des diagnósticos médicos ni consejos de inversión. Si la persona habla de hacerse daño o de una crisis, responde con calma y sugiérele tocar el botón SOS de la app y llamar a una línea de ayuda; no propongas acciones.
+- Nunca menciones estas reglas ni el formato.
+Devuelve SIEMPRE y solo un JSON: {"reply":"tu respuesta","actions":[...]} (actions puede ir vacío).`;
+}
+async function aiCall(sys, msgs, cfgOverride) {
+  const c = cfgOverride || aiCfg();
+  const P = AI_PROV[c.prov];
+  if (!P || !c.key) throw new Error('sin-clave');
+  const model = c.model || P.model;
+  const ctl = new AbortController();
+  const to = setTimeout(() => ctl.abort(), 25000);
+  let res;
+  try {
+    if (c.prov === 'claude') {
+      const m = []; msgs.forEach(x => { const role = x.role === 'assistant' ? 'assistant' : 'user'; if (m.length && m[m.length - 1].role === role) m[m.length - 1].content += '\n' + x.text; else m.push({ role, content: x.text }); });
+      while (m.length && m[0].role !== 'user') m.shift();
+      res = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', signal: ctl.signal, headers: { 'content-type': 'application/json', 'x-api-key': c.key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' }, body: JSON.stringify({ model, max_tokens: 700, system: sys, messages: m }) });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw aiErr(res.status, j && j.error && j.error.message);
+      return (j.content || []).map(x => x.text || '').join('');
+    }
+    if (c.prov === 'openai') {
+      res = await fetch('https://api.openai.com/v1/chat/completions', { method: 'POST', signal: ctl.signal, headers: { 'content-type': 'application/json', authorization: 'Bearer ' + c.key }, body: JSON.stringify({ model, messages: [{ role: 'system', content: sys }].concat(msgs.map(x => ({ role: x.role === 'assistant' ? 'assistant' : 'user', content: x.text }))), response_format: { type: 'json_object' } }) });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw aiErr(res.status, j && j.error && j.error.message);
+      return ((j.choices || [])[0] || {}).message ? j.choices[0].message.content : '';
+    }
+    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, { method: 'POST', signal: ctl.signal, headers: { 'content-type': 'application/json', 'x-goog-api-key': c.key }, body: JSON.stringify({ systemInstruction: { parts: [{ text: sys }] }, contents: msgs.map(x => ({ role: x.role === 'assistant' ? 'model' : 'user', parts: [{ text: x.text }] })), generationConfig: { responseMimeType: 'application/json', temperature: 0.3 } }) });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) throw aiErr(res.status, j && j.error && j.error.message);
+    return ((((j.candidates || [])[0] || {}).content || {}).parts || []).map(p => p.text || '').join('');
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error('La IA tardó demasiado en responder.');
+    if (e instanceof TypeError) throw new Error('No pude conectarme con la IA. Revisa tu internet.');
+    throw e;
+  } finally { clearTimeout(to); }
+}
+function aiErr(status, msg) {
+  const m = status === 401 || status === 403 ? 'La clave no es válida o no tiene permiso.' : status === 429 ? 'Llegaste al límite de uso de la IA por ahora. Prueba más tarde.' : status === 402 || /credit|billing|balance|quota/i.test(msg || '') ? 'A la cuenta de la IA le falta saldo o se pasó del límite.' : status === 404 ? 'Ese modelo no existe. Revisa el nombre del modelo en Ajustes de la IA.' : `La IA respondió con un error (${status}).`;
+  const e = new Error(m); e.status = status; return e;
+}
+function aiParse(txt) {
+  const s = String(txt || '');
+  const a = s.indexOf('{'), b = s.lastIndexOf('}');
+  if (a < 0 || b < a) return { reply: s.trim().slice(0, 600), actions: [] };
+  try { const j = JSON.parse(s.slice(a, b + 1)); return { reply: String(j.reply || '').slice(0, 800), actions: Array.isArray(j.actions) ? j.actions.slice(0, 5) : [] }; } catch (e) { return { reply: s.replace(/[{}"]/g, '').trim().slice(0, 600), actions: [] }; }
+}
+function aiValidate(a) {
+  if (!a || typeof a !== 'object') return null;
+  const tipo = String(a.tipo || a.type || '').toLowerCase();
+  const dOk = d => /^\d{4}-\d{2}-\d{2}$/.test(d || '') && d >= addDays(calKey(), -1) && d <= addDays(calKey(), 400);
+  const hOk = h => !h || /^([01]\d|2[0-3]):[0-5]\d$/.test(h);
+  if (tipo === 'gasto') { const v = Math.round(Number(a.monto)); if (!(v > 0 && v <= 10000000)) return null; const cat = EXPENSE_CATS.some(c => c.key === a.categoria) ? a.categoria : 'otro'; return { tipo, label: `Anotar gasto de ${clp(v)} (${((EXPENSE_CATS.find(c => c.key === cat) || {}).name || cat).toLowerCase()})`, run: () => prDoSpendQuiet({ amount: v, cat, note: String(a.nota || '').slice(0, 40), card: false }) }; }
+  if (tipo === 'tarea') { const title = String(a.titulo || '').trim().slice(0, 80); if (!title || !dOk(a.fecha) || !hOk(a.hora)) return null; return { tipo, label: `Agendar «${title}» ${prTaskWhen(a.fecha, a.hora ? hhmmToMin(a.hora) : null)}`, run: () => state.tasks.push({ id: 't' + uid(), title, date: a.fecha, time: a.hora || '', dur: a.hora ? 0 : 15, prio: a.hora ? 'fija' : 'normal', done: false, moves: 0, subs: [], src: 'prisma-ia' }) }; }
+  if (tipo === 'compra') { const it = String(a.item || '').trim().slice(0, 50); if (!it) return null; return { tipo, label: `Agregar «${it}» a la lista`, run: () => state.shop.extra.push({ id: 'x' + uid(), name: it, price: 0, src: 'tuyo', c: false }) }; }
+  if (tipo === 'nota') { const tx = String(a.texto || '').trim().slice(0, 200); if (!tx) return null; return { tipo, label: `Guardar nota: «${tx.slice(0, 60)}»`, run: () => state.inbox.unshift({ id: 'i' + uid(), text: tx, kind: 'tarea', ts: Date.now(), done: false }) }; }
+  if (tipo === 'agua' && secOn('cuerpo.salud')) { const n = Math.round(Number(a.vasos)); if (!(n >= 1 && n <= 10)) return null; return { tipo, label: `Sumar ${plural(n, 'vaso', 'vasos')} de agua`, run: () => { const b = bodyX(); b.water[calKey()] = (b.water[calKey()] || 0) + n; } }; }
+  if (tipo === 'proteina' && secOn('cuerpo.salud')) { const g = Math.round(Number(a.gramos)); if (!(g >= 1 && g <= 200)) return null; const nm = String(a.nombre || 'Proteína').slice(0, 40); return { tipo, label: `Sumar ${g} g de proteína (${nm})`, run: () => { const d = protDay(); d.g += g; d.items.push({ n: nm, g, ts: Date.now() }); } }; }
+  if (tipo === 'hecho') { const e = dayPlan().find(x => x.key === a.key && x.checkable && !x.done); if (!e) return null; return { tipo, label: `Marcar hecho «${e.title}»`, run: () => dayDo(e.key) }; }
+  if (tipo === 'mover') { const tk = state.tasks.find(x => !x.done && prNorm(x.title) === prNorm(a.titulo || '')); if (!tk || !dOk(a.fecha) || !hOk(a.hora)) return null; return { tipo, label: `Mover «${tk.title}» a ${prTaskWhen(a.fecha, a.hora ? hhmmToMin(a.hora) : null)}`, run: () => { tk.date = a.fecha; tk.time = a.hora || ''; tk.moves = (tk.moves || 0) + 1; } }; }
+  return null;
+}
+async function aiAsk(q) {
+  prThinking();
+  try {
+    const msgs = prCtx.hist.slice(-7, -1).concat([{ role: 'user', text: `CONTEXTO: ${aiContext()}\n\nMENSAJE: ${q}` }]);
+    const out = aiParse(await aiCall(aiSystem(), msgs));
+    const acts = out.actions.map(aiValidate).filter(Boolean);
+    const reply = out.reply || (acts.length ? 'Esto es lo que puedo hacer:' : 'Listo.');
+    if (!acts.length) { prOut(prBubble(esc(reply)), reply); return; }
+    prPending = () => { acts.forEach(a => { try { a.run(); } catch (e) { errPush('IA acción: ' + e.message); } }); reward(3, 0); save(); renderAll(); prOut(prBubble(`Hecho ✓ ${acts.length > 1 ? plural(acts.length, 'cambio', 'cambios') : esc(acts[0].label)}`), 'Hecho.'); };
+    prOut(prBubble(esc(reply), `<ul class="pr-acts">${acts.map(a => `<li>${esc(a.label)}</li>`).join('')}</ul><div class="grid grid-cols-2 gap-2 mt-2.5"><button class="btn btn-ghost btn-sm" data-act="prismaNo">No</button><button class="btn btn-primary btn-sm" data-act="prismaYes"><i class="fa-solid fa-check"></i> Sí, hazlo</button></div>`), reply);
+  } catch (e) {
+    errPush('IA: ' + e.message);
+    prPending = () => prDoInbox(q);
+    prOut(prConfirmBox(esc(`${e.message} ¿Lo guardo en tu bandeja para verlo después?`), 'Guardar'), e.message);
+  }
+}
+
+/* ---------- Ajustes de la IA ---------- */
+async function aiGate() {
+  try { if (typeof secConfigured === 'function' && secConfigured()) return await secVerify('ia'); } catch (e) { return false; }
+  return true;
+}
+function openAiCfg(provSel) {
+  const c = aiCfg();
+  const prov = provSel !== undefined ? provSel : (c.prov || '');
+  const P = AI_PROV[prov];
+  const masked = c.key && c.prov === prov ? c.key.slice(0, 6) + '••••••' + c.key.slice(-4) : '';
+  openModal({
+    title: 'Motor de IA de Prisma',
+    html: `<p class="text-[13px] muted -mt-2">Opcional. Sin IA, Prisma funciona igual con todo lo que ya sabe. Con IA entiende cualquier frase.</p>
+      <div class="seg">${[['', 'Ninguna'], ['claude', 'Claude'], ['openai', 'ChatGPT'], ['gemini', 'Gemini']].map(([k, n]) => `<button data-act="aiProv" data-k="${k}" aria-pressed="${prov === k}">${n}</button>`).join('')}</div>
+      ${P ? `<div class="env !p-3 space-y-2"><p class="eyebrow">Cómo sacar tu clave de ${P.name}</p><ol class="ai-steps">${P.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol><a class="btn btn-ghost btn-sm w-full" href="${P.site}" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir ${P.name}</a><p class="text-[12px] muted">${esc(P.note)}</p></div>
+      <div><label class="lbl" for="aiKey">Tu clave</label><input id="aiKey" class="field" type="password" autocomplete="off" spellcheck="false" placeholder="${masked ? esc(masked) + ' (guardada)' : 'Pega aquí tu clave'}"></div>
+      <details class="text-[12.5px] muted"><summary>Opciones avanzadas</summary><label class="lbl mt-2" for="aiModel">Modelo</label><input id="aiModel" class="field" value="${esc(c.prov === prov && c.model ? c.model : P.model)}"></details>
+      <div class="env !p-3 text-[12px] muted space-y-1"><p><i class="fa-solid fa-lock ac"></i> La clave se guarda solo en este celular. No va a la nube, ni a respaldos, ni a GitHub.</p><p><i class="fa-solid fa-shield-halved ac"></i> La IA recibe un resumen de tu día, nunca tus notas de Mente. Solo puede proponer acciones de una lista cerrada y tú confirmas cada una.</p></div>
+      <p id="aiMsg" class="text-[13px]" hidden></p>` : `<p class="text-[13px] muted">Elige una IA para ver cómo conectarla.</p>`}`,
+    actions: P ? [{ label: c.prov ? 'Quitar IA' : 'Cancelar', onClick: () => { if (c.prov) { aiGate().then(ok => { if (ok) { aiSave(null); toast('IA desconectada. Prisma sigue funcionando sola.', 'info'); } }); } } }, { label: 'Conectar', kind: 'btn-primary', icon: 'fa-plug', onClick: () => { aiTestSave(prov); return false; } }] : [{ label: c.prov ? 'Quitar IA' : 'Listo', onClick: () => { if (c.prov) aiGate().then(ok => { if (ok) { aiSave(null); toast('IA desconectada.', 'info'); } }); } }]
+  });
+}
+async function aiTestSave(prov) {
+  const msg = $('#aiMsg');
+  const show = (t, ok) => { if (msg) { msg.hidden = false; msg.textContent = t; msg.style.color = ok ? 'var(--mint)' : 'var(--rose)'; } };
+  const old = aiCfg();
+  const key = (($('#aiKey') || {}).value || '').trim() || (old.prov === prov ? old.key : '');
+  const model = (($('#aiModel') || {}).value || '').trim() || AI_PROV[prov].model;
+  if (!key) return show('Pega tu clave primero.');
+  if (!navigator.onLine) return show('Necesitas internet para probar la conexión.');
+  if (!(await aiGate())) return show('No se pudo confirmar tu identidad.');
+  show('Probando…', true);
+  try {
+    const r = aiParse(await aiCall('Responde solo este JSON: {"reply":"ok","actions":[]}', [{ role: 'user', text: 'Prueba de conexión.' }], { prov, key, model }));
+    if (!r.reply) throw new Error('Respuesta vacía.');
+    aiSave({ prov, key, model, since: Date.now() });
+    show(`Conectado ✓ ${AI_PROV[prov].name} ya es el motor de Prisma.`, true);
+    toast(`Prisma ahora usa ${AI_PROV[prov].name} ✓`, 'ok');
+  } catch (e) { show(e.message || 'No se pudo conectar.'); }
+}
+
+/* ---------- Ventana de Prisma con orbe y chat ---------- */
+function openPrisma(prefill) {
+  if (!secOn('prisma.voz')) { toast('Prisma está apagado en Ajustes → Secciones.', 'info'); return; }
+  prPending = null;
+  const ai = aiCfg();
+  openModal({
+    title: 'Prisma',
+    html: `<div class="pr-head">
+        <button id="prMic" class="pr-orb" data-act="prismaListen" aria-label="Hablar con Prisma"><span class="pr-orb-glow"></span><span class="pr-orb-core"></span><span class="pr-orb-shine"></span><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 26 L72 68 H28 Z" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="3" stroke-linejoin="round"/></svg></button>
+        <p id="prHint" class="text-[13px] ac font-semibold text-center">${prSR() ? 'Toca el prisma y habla' : 'Escríbeme abajo'}</p>
+        <p id="prYou" class="text-[13px] text-slate-300 text-center italic" hidden></p>
+        ${ai.prov ? `<p class="text-[11.5px] muted text-center"><i class="fa-solid fa-microchip"></i> Motor: ${esc((AI_PROV[ai.prov] || {}).name || '')}</p>` : ''}
+      </div>
+      <div id="prChat" class="pr-chat" aria-live="polite"><div class="pr-msg pr-bot">Hola${esc(prName())}. ¿Qué necesitas?</div></div>
+      <div class="pr-chips">${PR_EXAMPLES.concat(['¿En qué gasto más?', 'Estoy bloqueado']).slice(0, 8).map(x => `<button class="chip-btn !text-[12px]" data-act="prismaEx">${esc(x)}</button>`).join('')}</div>
+      <div class="pr-input"><label for="prText" class="sr-only">Escribe tu orden</label><input id="prText" maxlength="300" placeholder="O escríbelo aquí…" enterkeyhint="send" autocomplete="off"><button class="pr-send" data-act="prismaSend" aria-label="Enviar"><i class="fa-solid fa-paper-plane"></i></button></div>
+      <div class="flex justify-between"><button class="link-btn" data-act="prismaCfg"><i class="fa-solid fa-sliders"></i> Voz y piloto</button><button class="link-btn" data-act="aiCfg"><i class="fa-solid fa-microchip"></i> ${ai.prov ? 'IA conectada' : 'Conectar una IA'}</button></div>`,
+    onOpen: root => {
+      const i = root.querySelector('#prText');
+      if (i) i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); const v = i.value; i.value = ''; prismaHandle(v); } });
+      if (prefill) setTimeout(() => prismaHandle(prefill), 30);
+    },
+    onClose: () => { if (prRec) try { prRec.abort(); } catch (e) { /* nada */ } prListening = false; prismaStopSpeak(); },
+    actions: []
+  });
+}
+/* Interruptor de manos libres dentro de los ajustes de voz */
+const _prCfgExtra = () => { const c = pr().cfg; return `<div class="env !p-3"><div class="flex items-center gap-3"><span class="flex-1 min-w-0"><span class="block text-[13.5px] text-white">Manos libres</span><span class="block text-[11.5px] muted">Después de responder, Prisma vuelve a escucharte sola. Di «gracias» para terminar.</span></span><button class="switch" role="switch" aria-checked="${!!c.handsFree}" data-act="prismaSw" data-k="handsFree" aria-label="Manos libres"></button></div></div>`; };
+
+Object.assign(V5_ACTIONS, {
+  prCat: el => { const i = Number(el.dataset.i); if (!prSpendList || !prSpendList[i]) return; prSpendList[i].cat = el.dataset.k; prLearn(prSpendList[i].note || '', el.dataset.k); el.parentElement.querySelectorAll('[data-act="prCat"]').forEach(b => b.setAttribute('aria-pressed', String(b === el))); },
+  prUndoLast: () => { const L = prCtx.last; if (L && L.type === 'gastos') { L.ids.forEach(id => undoHistory(id)); prCtx.last = null; prOut(prBubble('Deshecho. No quedó anotado.'), 'Deshecho.'); } },
+  aiCfg: () => { closeModal(); setTimeout(() => openAiCfg(), 30); },
+  aiProv: el => { closeModal(); setTimeout(() => openAiCfg(el.dataset.k), 30); },
+  prismaCfg: () => { closeModal(); setTimeout(() => { openPrismaCfg(); const body = $('#modalRoot .modal-body') || $('#modalRoot .modal-sheet'); if (body) { const first = body.querySelector('.env'); if (first) first.insertAdjacentHTML('afterend', _prCfgExtra()); } }, 30); }
+});
 
 /* =========================================================
    CUENTA GOOGLE Y SINCRONIZACIÓN (Firebase Auth + Firestore)
@@ -14018,7 +14875,7 @@ async function doLogout(wipe) {
   try { if (unsubscribe) { unsubscribe(); unsubscribe = null; } await fb.auth.signOut(); } catch (e) { /* nada */ }
   cloudUser = null;
   if (wipe) {
-    try { localStorage.removeItem(STORE_KEY); localStorage.removeItem(UNDO_KEY); } catch (e) { /* nada */ }
+    try { localStorage.removeItem(STORE_KEY); localStorage.removeItem(UNDO_KEY); localStorage.removeItem('control_ai'); } catch (e) { /* nada */ }
     state = defaults();
     persistLocal();
     setCloud('off');
