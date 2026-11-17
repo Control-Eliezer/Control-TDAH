@@ -1,0 +1,26 @@
+CONTROL · v8.0.0 (8.0 a 8.4 completas)
+======================================
+
+INSTALAR (7 archivos)
+  1. Borra de Descargas los archivos viejos (index.html, sw.js, manifest.json y los íconos).
+  2. Descarga los nuevos: index.html, sw.js, manifest.json, icon-192.png, icon-512.png,
+     icon-maskable-512.png y apple-touch-icon.png.
+  3. GitHub → Control-TDAH → Agregar archivo → Subir archivos → los 7 → Confirmar cambios.
+  4. Espera 2 minutos, cierra la app del todo y ábrela.
+  5. Ajustes, al final, debe decir 8.0.0.
+
+TUS DATOS NUEVOS (parche-v8.json · NO se sube a GitHub)
+  Ajustes → Terminal de parches → pega el contenido → Aplicar → revisa → Aplicar.
+  Pone tus tiendas, tu escalera de dinero, el tatuaje como premio mayor,
+  Rancagua como ubicación, tu peso y altura, y el cumpleaños de tu mamá (8 de noviembre).
+
+PRIMEROS PASOS
+  1. Hoy → "Hacer la guía interactiva".
+  2. Toca el micrófono de arriba y dile a Prisma: "¿qué sigue?".
+  3. Mente → "Conócete: test de personalidad" (2 minutos).
+  4. Casa → Ropa → "Configurar" (cuántas prendas de trabajo tienes).
+  5. Casa → Compartida: anota las tareas que te turnas con tu compañero.
+  6. Ajustes → Secciones: apaga lo que no uses.
+
+SI LA APP TE PREGUNTA QUÉ DATOS USAR (al entrar con Google)
+  Elige "Combinar los dos": junta lo del celular y lo de la nube sin perder nada.
