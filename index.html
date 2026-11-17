@@ -2072,8 +2072,10 @@ html.theme-light .nm-title, html.theme-light .nm-time span, html.theme-light .no
 html.theme-light .pr-me { background: #efe6da; color: var(--fg); } html.theme-light .pr-bot { background: #fff; color: var(--fg); } html.theme-light .pr-input { background: #fff; } html.theme-light .pr-input input { color: var(--fg); }
 .pr-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; } .pr-chips::-webkit-scrollbar { display: none; } .pr-chips .chip-btn { flex: none; white-space: nowrap; }
 /* Sin zoom con los dedos ni con doble toque */
-html, body { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html, body { touch-action: pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; overflow-x: hidden; overscroll-behavior-x: none; max-width: 100%; }
+#main, #view-hoy, .app-header { overflow-x: clip; }
 button, a, input, select, textarea, [data-act] { touch-action: manipulation; }
+.lad-amt { font-size: 11px !important; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -8604,9 +8606,10 @@ function spendCardHTML() {
   const over = sp.left < 0;
   const pct = sp.daily > 0 ? Math.min(100, sp.spentToday / sp.daily * 100) : (sp.spentToday > 0 ? 100 : 0);
   return `<div class="card space-y-3 ${over ? 'card-warn' : ''}">
-    <div class="flex items-end justify-between gap-3">
-      <div class="min-w-0"><p class="eyebrow">Ocio de hoy</p><p class="hero-num num mt-1" style="color:${over ? 'var(--rose)' : 'var(--fg)'}">${clp(Math.max(0, sp.left))}</p></div>
-      <div class="text-right"><p class="text-[11.5px] muted num">gastado hoy ${clp(sp.spentToday)}</p><p class="text-[11.5px] dim num">quedan ${clp(Math.max(0, sp.weekLeft))} de ${clp(sp.budget)} este mes</p></div>
+    <div>
+      <p class="eyebrow">Ocio de hoy</p>
+      <p class="hero-num num mt-1" style="color:${over ? 'var(--rose)' : 'var(--fg)'}">${clp(Math.max(0, sp.left))}</p>
+      <p class="text-[12.5px] muted num mt-1">Gastado hoy ${clp(sp.spentToday)} · quedan ${clp(Math.max(0, sp.weekLeft))} de ${clp(sp.budget)} este mes</p>
     </div>
     <span class="bar ${over ? 'over' : pct >= 80 ? 'warn' : ''}"><i style="width:${pct}%"></i></span>
     <p class="text-[11.5px] dim">${sp.funded == null ? `Aún no registras ingresos este mes: ${clp(sp.plan)} es lo planeado. ` : sp.funded < sp.plan ? `Por ahora llegaron ${clp(sp.funded)} de los ${clp(sp.plan)} de ocio: se completa con el próximo ingreso. ` : ''}Lo que no gastas hoy se suma a los días que vienen. ${over ? 'Hoy te pasaste: mañana el número baja solo.' : ''}</p>
@@ -14073,7 +14076,8 @@ function ladderColsHTML() {
   const d = new Date();
   return `<div class="card card-neon space-y-3" id="ladCols">
     <div><p class="eyebrow">${MESES[d.getMonth()].toUpperCase()} · LLEGÓ</p><p class="lad-big num">${clp(inc)}${exp ? ` <small>de ${clp(exp)}</small>` : ''}</p></div>
-    <div class="lad-cols" style="grid-template-columns:repeat(${cols.length}, minmax(0, 1fr))">${cols.map(([k, n, c]) => { const p = Math.round(Math.min(1, g[k].filled / g[k].need) * 100); return `<div class="lad-col"><span class="lad-pct num" style="color:${p >= 100 ? 'var(--mint)' : p > 0 ? c : 'var(--muted)'}">${p}%</span><div class="lad-bar ${p === 0 ? 'empty' : ''}"><i style="height:${p}%;background:linear-gradient(180deg, ${c}, ${c}cc)"></i></div><span class="lad-name">${n}</span><span class="lad-amt num">${clpShort(g[k].filled)}<br><span>de ${clpShort(g[k].need)}</span></span></div>`; }).join('')}</div>
+    <div class="lad-cols" style="grid-template-columns:repeat(${cols.length}, minmax(0, 1fr))">${cols.map(([k, n, c]) => { const p = Math.round(Math.min(1, g[k].filled / g[k].need) * 100); return `<div class="lad-col"><span class="lad-pct num" style="color:${p >= 100 ? 'var(--mint)' : p > 0 ? c : 'var(--muted)'}">${p}%</span><div class="lad-bar ${p === 0 ? 'empty' : ''}"><i style="height:${p}%;background:linear-gradient(180deg, ${c}, ${c}cc)"></i></div><span class="lad-name">${n}</span><span class="lad-amt num">${clpShort(g[k].need)}</span></div>`; }).join('')}</div>
+    <p class="text-[11.5px] muted">Debajo de cada columna, lo que necesita ese escalón al mes.</p>
     <p class="text-[12.5px] muted">${totFill >= totNeed ? 'La escalera está completa este mes ✓ Lo que llegue ahora va a la deuda o al ahorro.' : `Faltan <b class="text-white num">${clp(totNeed - totFill)}</b> para completar la escalera. Lo próximo que llegue va primero a <b class="text-white">${firstOpen ? firstOpen[1].toLowerCase() : ''}</b>.`}</p>
   </div>`;
 }
@@ -14437,7 +14441,7 @@ const AI_PROV = {
     steps: ['Entra a console.anthropic.com e inicia sesión (o crea tu cuenta).', 'Ve a Facturación (Billing), carga saldo con tu tarjeta y pon un tope mensual.', 'Ve a Claves de API (API keys) y toca Crear clave (Create Key).', 'Copia la clave (empieza con «sk-ant-») y pégala aquí abajo.'] },
   openai: { name: 'ChatGPT', model: 'gpt-5.4-mini', site: 'https://platform.openai.com/api-keys', note: 'De pago por uso. Es aparte del plan de ChatGPT. El uso normal de Prisma cuesta unos pocos dólares al mes.',
     steps: ['Entra a platform.openai.com e inicia sesión.', 'Ve a Facturación (Billing), carga saldo y pon un límite de gasto.', 'Ve a Claves de API (API keys) y toca Crear clave secreta (Create new secret key).', 'Copia la clave (empieza con «sk-») y pégala aquí abajo.'] },
-  gemini: { name: 'Gemini', model: 'gemini-flash-latest', site: 'https://aistudio.google.com/app/apikey', note: 'Gratis con un límite diario. En el plan gratis, Google puede usar lo que le dices para mejorar sus productos.',
+  gemini: { name: 'Gemini', model: 'gemini-flash-lite-latest', site: 'https://aistudio.google.com/app/apikey', note: 'Gratis con un límite diario. En el plan gratis, Google puede usar lo que le dices para mejorar sus productos.',
     steps: ['Entra a aistudio.google.com con tu cuenta de Google.', 'Toca Obtener clave de API (Get API key).', 'Toca Crear clave de API (Create API key).', 'Copia la clave y pégala aquí abajo.'] }
 };
 function aiCfg() { try { return JSON.parse(localStorage.getItem(AI_KEY) || '{}') || {}; } catch (e) { return {}; } }
@@ -14491,7 +14495,7 @@ async function aiCallOnce(sys, msgs, cfgOverride) {
   if (!P || !c.key) throw new Error('sin-clave');
   const model = c.model || P.model;
   const ctl = new AbortController();
-  const to = setTimeout(() => ctl.abort(), 25000);
+  const to = setTimeout(() => ctl.abort(), c.prov === 'gemini' ? 20000 : 30000);
   let res;
   try {
     if (c.prov === 'claude') {
@@ -14513,13 +14517,13 @@ async function aiCallOnce(sys, msgs, cfgOverride) {
     if (!res.ok) throw aiErr(res.status, j && j.error && j.error.message);
     return ((((j.candidates || [])[0] || {}).content || {}).parts || []).map(p => p.text || '').join('');
   } catch (e) {
-    if (e.name === 'AbortError') throw new Error('La IA tardó demasiado en responder.');
+    if (e.name === 'AbortError') { const er = new Error('La IA tardó demasiado en responder. Prueba de nuevo en un rato.'); er.timeout = true; throw er; }
     if (e instanceof TypeError) throw new Error('No pude conectarme con la IA. Revisa tu internet.');
     throw e;
   } finally { clearTimeout(to); }
 }
 /* Reintenta si el servicio está saturado y, en Gemini, prueba otros modelos gratis */
-const AI_FALLBACK = { gemini: ['gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite', 'gemini-2.5-flash'], claude: [], openai: [] };
+const AI_FALLBACK = { gemini: ['gemini-flash-lite-latest', 'gemini-2.5-flash-lite', 'gemini-flash-latest', 'gemini-2.5-flash'], claude: [], openai: [] };
 async function aiCall(sys, msgs, cfgOverride) {
   const c = Object.assign({}, cfgOverride || aiCfg());
   const P = AI_PROV[c.prov];
@@ -14537,7 +14541,7 @@ async function aiCall(sys, msgs, cfgOverride) {
       } catch (e) {
         lastErr = e;
         if (e.status === 503 || e.status === 500 || e.status === 529) { if (attempt === 0) { await new Promise(r => setTimeout(r, 1500)); continue; } break; }
-        if (e.status === 429 || e.status === 404) break;
+        if (e.status === 429 || e.status === 404 || e.timeout) break;
         throw e;
       }
     }
