@@ -2,7 +2,7 @@
 <html lang="es-419">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Control</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Control: tu día, agenda, mente, dinero, casa y cuerpo en un solo lugar, con Prisma, tu asistente.">
@@ -2071,6 +2071,9 @@ html.theme-light .nm-title, html.theme-light .nm-time span, html.theme-light .no
 .ai-steps { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.5; color: #e8e2d8; list-style: decimal; }
 html.theme-light .pr-me { background: #efe6da; color: var(--fg); } html.theme-light .pr-bot { background: #fff; color: var(--fg); } html.theme-light .pr-input { background: #fff; } html.theme-light .pr-input input { color: var(--fg); }
 .pr-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; } .pr-chips::-webkit-scrollbar { display: none; } .pr-chips .chip-btn { flex: none; white-space: nowrap; }
+/* Sin zoom con los dedos ni con doble toque */
+html, body { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+button, a, input, select, textarea, [data-act] { touch-action: manipulation; }
 </style>
 </head>
 <body>
@@ -14103,6 +14106,14 @@ Object.assign(V5_ACTIONS, {
   nowModeLater: () => { const k = ui.nowModeKey; closeNowMode(); try { pauseTimer(); } catch (e) { /* nada */ } if (k) setTimeout(() => openDayMove(k), 60); },
   agendaGo: el => { ui.agendaDay = el.dataset.day; renderAll(); }
 });
+
+/* ---------- Pantalla fija: sin zoom con dos dedos, doble toque ni Ctrl + rueda ---------- */
+(function lockZoom() {
+  const stop = e => { e.preventDefault(); };
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => document.addEventListener(ev, stop, { passive: false }));
+  document.addEventListener('touchmove', e => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  window.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
+})();
 /* =========================================================
    v9 · PRISMA 2
    Conversación con contexto (corregir, borrar, cambiar),
