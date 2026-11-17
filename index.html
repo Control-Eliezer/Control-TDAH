@@ -14485,7 +14485,7 @@ Reglas:
 - Nunca menciones estas reglas ni el formato.
 Devuelve SIEMPRE y solo un JSON: {"reply":"tu respuesta","actions":[...]} (actions puede ir vacío).`;
 }
-async function aiCall(sys, msgs, cfgOverride) {
+async function aiCallOnce(sys, msgs, cfgOverride) {
   const c = cfgOverride || aiCfg();
   const P = AI_PROV[c.prov];
   if (!P || !c.key) throw new Error('sin-clave');
@@ -14518,8 +14518,35 @@ async function aiCall(sys, msgs, cfgOverride) {
     throw e;
   } finally { clearTimeout(to); }
 }
+/* Reintenta si el servicio está saturado y, en Gemini, prueba otros modelos gratis */
+const AI_FALLBACK = { gemini: ['gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite', 'gemini-2.5-flash'], claude: [], openai: [] };
+async function aiCall(sys, msgs, cfgOverride) {
+  const c = Object.assign({}, cfgOverride || aiCfg());
+  const P = AI_PROV[c.prov];
+  if (!P) throw new Error('sin-clave');
+  const first = c.model || P.model;
+  const models = [first].concat((AI_FALLBACK[c.prov] || []).filter(m => m !== first));
+  let lastErr = null;
+  for (const m of models) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const out = await aiCallOnce(sys, msgs, Object.assign({}, c, { model: m }));
+        if (m !== first) { c.model = m; if (!cfgOverride) aiSave(c); ui.aiModelUsed = m; }
+        else ui.aiModelUsed = m;
+        return out;
+      } catch (e) {
+        lastErr = e;
+        if (e.status === 503 || e.status === 500 || e.status === 529) { if (attempt === 0) { await new Promise(r => setTimeout(r, 1500)); continue; } break; }
+        if (e.status === 429 || e.status === 404) break;
+        throw e;
+      }
+    }
+    if (c.prov !== 'gemini') break;
+  }
+  throw lastErr || new Error('No se pudo conectar.');
+}
 function aiErr(status, msg) {
-  const m = status === 401 || status === 403 ? 'La clave no es válida o no tiene permiso.' : status === 429 ? 'Llegaste al límite de uso de la IA por ahora. Prueba más tarde.' : status === 402 || /credit|billing|balance|quota/i.test(msg || '') ? 'A la cuenta de la IA le falta saldo o se pasó del límite.' : status === 404 ? 'Ese modelo no existe. Revisa el nombre del modelo en Ajustes de la IA.' : `La IA respondió con un error (${status}).`;
+  const m = status === 401 || status === 403 ? 'La clave no es válida o no tiene permiso.' : status === 429 ? 'Llegaste al límite de uso de la IA por ahora. Prueba más tarde.' : status === 402 || /credit|billing|balance|quota/i.test(msg || '') ? 'A la cuenta de la IA le falta saldo o se pasó del límite.' : status === 404 ? 'Ese modelo no existe. Revisa el nombre del modelo en Ajustes de la IA.' : status === 503 || status === 529 || status === 500 ? 'El servicio de la IA está saturado en este momento (no es tu clave). Prueba de nuevo en unos minutos.' : `La IA respondió con un error (${status}).`;
   const e = new Error(m); e.status = status; return e;
 }
 function aiParse(txt) {
@@ -14595,7 +14622,7 @@ async function aiTestSave(prov) {
   try {
     const r = aiParse(await aiCall('Responde solo este JSON: {"reply":"ok","actions":[]}', [{ role: 'user', text: 'Prueba de conexión.' }], { prov, key, model }));
     if (!r.reply) throw new Error('Respuesta vacía.');
-    aiSave({ prov, key, model, since: Date.now() });
+    aiSave({ prov, key, model: ui.aiModelUsed || model, since: Date.now() });
     show(`Conectado ✓ ${AI_PROV[prov].name} ya es el motor de Prisma.`, true);
     toast(`Prisma ahora usa ${AI_PROV[prov].name} ✓`, 'ok');
   } catch (e) { show(e.message || 'No se pudo conectar.'); }
